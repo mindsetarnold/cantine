@@ -2,110 +2,87 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cantine – Notez votre repas</title>
 <style>
-/* Version rétrocompatible : pas de variables CSS, Grid, clamp(), gap ou aspect-ratio */
-*{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
-body{font-family:Arial,Helvetica,sans-serif;background:#f2f7f4;color:#14281f;min-height:100%;font-size:16px}
-h1,h2,h3{font-family:Arial,Helvetica,sans-serif;line-height:1.2}
-button{font:inherit;cursor:pointer;border:0;color:inherit;-webkit-appearance:none}
-button:focus,input:focus{outline:2px solid #14532d;outline-offset:2px}
-header{display:block;padding:20px 4%;overflow:hidden}
-header h1{font-size:30px;font-weight:bold;float:left;max-width:75%}
-.adminlink{background:none;color:#5b6e64;font-size:14px;padding:9px 12px;border-radius:20px;float:right}
-main{padding:0 4% 48px}
-.lead{color:#5b6e64;font-size:18px;margin:0 0 24px}
-.grid{font-size:0;text-align:left}
-.plat{position:relative;display:inline-block;vertical-align:top;width:31.3%;margin:0 1% 18px 0;height:300px;border-radius:20px;overflow:hidden;background:#14532d;text-align:left;box-shadow:0 5px 15px rgba(20,40,31,.15)}
+:root{--bg:#f2f7f4;--ink:#14281f;--mut:#5b6e64;--sun:#ffc93c;--forest:#14532d;--line:#d9e5de;--r1:#e5484d;--r2:#f08a3c;--r3:#f5c542;--r4:#8cc152;--r5:#2fa36b}
+*{box-sizing:border-box;margin:0}
+body{font-family:Roboto,Arial,sans-serif;background:#f2f7f4;color:#14281f;min-height:100%}
+h1,h2,h3{line-height:1.15;font-weight:bold}
+button{font:inherit;cursor:pointer;border:0;color:inherit;background:none}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 24px}
+header h1{font-size:28px}
+.adminlink{color:#5b6e64;font-size:14px;padding:8px 12px;border-radius:20px}
+main{padding:0 14px 40px}
+.lead{color:#5b6e64;font-size:18px;margin:0 10px 16px}
+.grid{display:flex;flex-wrap:wrap}
+.cell{width:25%;padding:10px}
+.plat{display:block;width:100%;position:relative;border-radius:24px;overflow:hidden;background:#14532d;box-shadow:0 4px 14px rgba(20,40,31,.25);text-align:left;padding:0}
+.plat .sp{padding-top:125%}
+.plat .in{position:absolute;top:0;left:0;right:0;bottom:0}
 .plat img{width:100%;height:100%;object-fit:cover;display:block}
-.plat .ph{width:100%;height:100%;text-align:center;padding-top:100px;font-size:64px;background:#1c6b3c;color:#fff}
-.plat .nom{position:absolute;left:0;right:0;bottom:0;padding:50px 16px 18px;background:#183c29;color:#fff;font-weight:bold;font-size:22px}
-.plat .tag{position:absolute;top:12px;right:12px;background:#ffc93c;color:#14281f;font-weight:bold;font-size:14px;padding:7px 12px;border-radius:20px}
+.plat .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:64px;background:#1c6b3c}
+.plat .nom{position:absolute;left:0;right:0;bottom:0;padding:50px 16px 16px;background:linear-gradient(transparent,rgba(10,25,16,.88));color:#fff;font-weight:bold;font-size:22px}
+.plat .tag{position:absolute;top:12px;right:12px;background:#ffc93c;color:#14281f;font-weight:bold;font-size:13px;padding:5px 11px;border-radius:20px}
 .empty{text-align:center;padding:50px 20px;color:#5b6e64;font-size:18px}
-.overlay{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(10,25,16,.75);display:none;z-index:10;overflow:auto;padding:16px;text-align:center}
-.overlay.on{display:block}
-.overlay:before{content:"";display:inline-block;height:100%;vertical-align:middle}
-.sheet{display:inline-block;vertical-align:middle;text-align:left;background:#fff;border-radius:24px;padding:24px;width:100%;max-width:640px;margin:12px auto}
-.sheet .big{width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:16px;background:#14532d}
-.sheet h2{font-size:28px;margin-bottom:5px}
-.sheet p.q{color:#5b6e64;margin-bottom:18px}
-.rates{overflow:hidden;text-align:center}
-.rate{display:inline-block;vertical-align:top;width:18.5%;margin:0 .5% 8px;background:#f2f7f4;border-radius:14px;padding:12px 2px;font-size:12px;font-weight:bold;border:2px solid transparent}
-.rate span{display:block;font-size:30px;margin-bottom:5px}
-.cancel{margin-top:12px;background:none;color:#5b6e64;padding:10px}
-.thanks{text-align:center;padding:40px 18px}
-.thanks .e{font-size:64px}
-.thanks h2{font-size:28px;margin-top:8px}
-.field{display:block;width:100%;padding:12px 14px;border-radius:10px;border:2px solid #d9e5de;font:inherit;margin-bottom:10px;background:#fff;min-height:44px}
-.btn{display:inline-block;background:#14532d;color:#fff;padding:12px 18px;border-radius:10px;font-weight:bold;min-height:42px}
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,25,16,.65);display:none;align-items:center;justify-content:center;padding:14px;z-index:10;overflow:auto}
+.overlay.on{display:flex}
+.sheet{background:#fff;border-radius:28px;padding:24px;width:100%;max-width:640px}
+.sheet .big{width:100%;height:220px;object-fit:cover;border-radius:18px;margin-bottom:14px;background:#14532d;display:block}
+.sheet h2{font-size:26px;margin-bottom:4px}
+.q{color:#5b6e64;margin-bottom:16px}
+.rates{display:flex}
+.rate{flex:1;margin:0 4px;background:#f2f7f4;border-radius:18px;padding:12px 2px;text-align:center;font-size:12px;font-weight:bold;border:3px solid transparent}
+.rate span{display:block;font-size:34px;margin-bottom:4px}
+.rate:active{border-color:#2fa36b}
+.cancel{margin-top:14px;color:#5b6e64;padding:8px}
+.thanks{text-align:center;padding:40px 20px}
+.thanks .e{font-size:68px}
+.thanks h2{font-size:30px;margin-top:8px}
+.field{display:block;width:100%;padding:12px;border-radius:12px;border:2px solid #d9e5de;font:inherit;margin-bottom:10px;background:#fff}
+.btn{display:inline-block;background:#14532d;color:#fff;padding:11px 18px;border-radius:12px;font-weight:bold;margin:2px}
 .btn.sec{background:#e3eee8;color:#14281f}
 .btn.danger{background:#fde8e8;color:#b42318}
-.err{color:#b42318;font-size:14px;min-height:20px;margin-bottom:8px}
-/* Administration */
-#admin{display:none;max-width:1000px;margin:0 auto;padding:24px 4% 60px}
+.err{color:#b42318;font-size:14px;min-height:18px;margin-bottom:8px}
+#admin{display:none;max-width:1000px;margin:0 auto;padding:20px 16px 60px}
 #admin.on{display:block}
-.bar{margin-bottom:20px;overflow:hidden}
-.bar h1{font-size:28px;margin-bottom:14px}
-.tabs{display:inline-block;background:#e3eee8;padding:5px;border-radius:22px;margin:0 10px 12px 0}
-.tabs button{background:none;padding:9px 14px;border-radius:20px;font-weight:bold}
-.tabs button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12)}
-.panel{background:#fff;border-radius:18px;padding:20px;margin-bottom:16px}
-.panel h3{font-size:21px;margin-bottom:14px}
-.add{overflow:hidden}
-.add .field{float:left;width:42%;margin-right:1%}
-.add input[type=file]{width:35%}
-.add .btn{float:right}
-.row{border-top:1px solid #d9e5de;padding:12px 0;overflow:hidden}
-.row:first-child{border-top:0}
-.thumb{float:left;width:64px;height:64px;border-radius:12px;object-fit:cover;background:#14532d;text-align:center;font-size:25px;line-height:64px;margin-right:12px}
-.row strong{display:block;padding-top:8px;overflow:hidden}
-.acts{clear:both;padding-top:10px;text-align:left}
-.acts .btn{padding:8px 10px;font-size:13px;margin:3px}
-.sw{display:inline-block;vertical-align:middle;padding:8px;background:none;font-weight:bold}
-.sw i{display:inline-block;vertical-align:middle;width:40px;height:24px;border-radius:20px;background:#c9d6cf;position:relative;margin-right:6px}
-.sw i:after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff}
-.sw.on i{background:#2fa36b}
-.sw.on i:after{left:19px}
-.stat{padding:16px 0;border-top:1px solid #d9e5de;overflow:hidden}
-.stat:first-child{border-top:0}
-.stat .top{overflow:hidden;margin-bottom:10px}
-.avg{float:right;font-weight:bold;font-size:26px;text-align:right}
+.bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.bar>*{margin-bottom:8px}
+.tabs{display:flex;background:#e3eee8;padding:4px;border-radius:30px}
+.tabs button{padding:9px 16px;border-radius:30px;font-weight:bold}
+.tabs button.on{background:#fff}
+.panel{background:#fff;border-radius:22px;padding:20px;margin-bottom:16px}
+.panel h3{font-size:20px;margin-bottom:12px}
+.add{display:flex;flex-wrap:wrap;align-items:center}
+.add .field{flex:1;min-width:180px;margin:0 8px 8px 0}
+.row{display:flex;align-items:center;padding:10px 0;border-top:1px solid #d9e5de;flex-wrap:wrap}
+.thumb{width:60px;height:60px;border-radius:12px;object-fit:cover;background:#14532d;display:flex;align-items:center;justify-content:center;font-size:26px;flex:none;margin-right:12px}
+.row strong{flex:1;min-width:120px}
+.acts{display:flex;flex-wrap:wrap;align-items:center}
+.acts .btn{padding:8px 12px;font-size:14px}
+.sw{display:flex;align-items:center;font-weight:bold;font-size:14px;padding:6px;margin-right:6px}
+.sw i{display:block;width:44px;height:26px;border-radius:13px;background:#c9d6cf;position:relative;margin-right:8px}
+.sw i:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff}
+.sw.on i{background:#2fa36b}.sw.on i:after{left:21px}
+.stat{padding:14px 0;border-top:1px solid #d9e5de}
+.stat .top{display:flex;align-items:center;margin-bottom:10px}
+.stat .top strong{flex:1}
+.avg{font-weight:bold;font-size:26px;text-align:right}
 .avg small{display:block;font-weight:normal;font-size:13px;color:#5b6e64}
-.dist{height:14px;border-radius:10px;overflow:hidden;background:#d9e5de;white-space:nowrap}
-.dist div{display:inline-block;height:14px}
-.legend{font-size:13px;color:#5b6e64;margin-top:8px;line-height:1.8}
-.legend b{color:#14281f}
+.dist{display:flex;height:14px;border-radius:7px;overflow:hidden;background:#d9e5de}
+.legend{font-size:13px;color:#5b6e64;margin-top:8px}
+.legend span{display:inline-block;margin-right:12px}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
-.filters{margin-bottom:12px}
-.filters .field{display:inline-block;width:auto;max-width:100%;margin:5px 5px 5px 0}
+.filters{display:flex;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.filters>*{margin:0 8px 8px 0}
+.filters .field{width:auto}
 .hint{background:#fff6d6;border-radius:12px;padding:14px;font-size:14px;margin:20px}
-[hidden]{display:none!important}
-@media(max-width:700px){
- header{padding:16px 4%}
- header h1{float:none;max-width:none;font-size:25px;margin-bottom:8px}
- .adminlink{float:none;padding-left:0}
- .plat{width:48%;margin-right:1%;height:230px}
- .plat .nom{font-size:18px;padding:40px 12px 14px}
- .sheet{padding:18px}
- .rate{width:18%;font-size:11px}
- .rate span{font-size:25px}
- .add .field,.add input[type=file]{float:none;width:100%;margin:0 0 9px}
- .add .btn{float:none}
- .tabs{display:block}
- .tabs button{padding:8px 10px}
-}
-@media(max-width:380px){
- .plat{height:190px}
- .rate{width:18%;padding:9px 1px}
- .rate span{font-size:21px}
- .rate{font-size:10px}
-}
+@media(max-width:900px){.cell{width:33.33%}}
+@media(max-width:640px){.cell{width:50%}.rate{font-size:10px}.rate span{font-size:26px}header h1{font-size:22px}}
 </style>
 </head>
 <body>
+
 <div id="student">
   <header>
     <h1>Qu’avez-vous pensé du repas ?</h1>
@@ -114,36 +91,33 @@ main{padding:0 4% 48px}
   <main>
     <p class="lead">Touchez un plat pour lui donner une note.</p>
     <div class="grid" id="grid"></div>
-    <div class="empty" id="empty" hidden>Aucun plat à noter pour le moment. Revenez à la prochaine pause déjeuner !</div>
+    <div class="empty" id="empty" style="display:none">Aucun plat à noter pour le moment. Revenez à la prochaine pause déjeuner !</div>
   </main>
 </div>
 
 <div class="overlay" id="rateModal"><div class="sheet" id="rateSheet"></div></div>
+
 <div class="overlay" id="loginModal">
   <div class="sheet" style="max-width:420px">
-    <h2>Espace administrateur</h2>
-    <p class="q">Entrez le mot de passe pour gérer les plats.</p>
-    <input class="field" id="pwd" type="password" placeholder="Mot de passe" autocomplete="current-password">
+    <h2>Espace administrateur</h2><p class="q">Entrez le mot de passe.</p>
+    <input class="field" id="pwd" type="password" placeholder="Mot de passe">
     <div class="err" id="loginErr"></div>
-    <div><button class="btn" id="btnLogin">Entrer</button> <button class="btn sec" id="btnCloseLogin">Annuler</button></div>
+    <button class="btn" id="btnLogin">Entrer</button><button class="btn sec" id="btnCloseLogin">Annuler</button>
   </div>
 </div>
 
 <div id="admin">
   <div class="bar">
     <h1>Espace admin</h1>
-    <div class="tabs">
-      <button class="on" data-tab="plats">Plats du jour</button>
-      <button data-tab="stats">Statistiques</button>
-      <button data-tab="params">Paramètres</button>
-    </div>
-    <div><button class="btn sec" id="btnBack">Voir l’écran élèves</button> <button class="btn sec" id="btnLogout">Verrouiller</button></div>
+    <div class="tabs"><button class="on" data-tab="plats">Plats du jour</button><button data-tab="stats">Statistiques</button><button data-tab="params">Paramètres</button></div>
+    <div><button class="btn sec" id="btnBack">Écran élèves</button><button class="btn sec" id="btnLogout">Verrouiller</button></div>
   </div>
+
   <section id="tab-plats">
     <div class="panel">
       <h3>Ajouter un plat</h3>
       <div class="add">
-        <input class="field" id="newNom" placeholder="Nom du plat (ex. Poulet rôti, riz)">
+        <input class="field" id="newNom" placeholder="Nom du plat">
         <input class="field" id="newPhoto" type="file" accept="image/*">
         <button class="btn" id="btnAdd">Ajouter</button>
       </div>
@@ -151,11 +125,12 @@ main{padding:0 4% 48px}
     </div>
     <div class="panel">
       <h3>Mes plats</h3>
-      <p style="color:#5b6e64;margin-bottom:8px">Activez les plats servis aujourd’hui : seuls ceux-là apparaissent chez les élèves.</p>
+      <p class="q" style="margin-bottom:8px">Activez les plats servis aujourd’hui : seuls ceux-là apparaissent chez les élèves.</p>
       <div id="platList"></div>
     </div>
   </section>
-  <section id="tab-stats" hidden>
+
+  <section id="tab-stats" style="display:none">
     <div class="panel">
       <h3>Statistiques par plat</h3>
       <div class="filters">
@@ -167,396 +142,253 @@ main{padding:0 4% 48px}
       <div id="statList"></div>
     </div>
   </section>
-  <section id="tab-params" hidden>
+
+  <section id="tab-params" style="display:none">
     <div class="panel" style="max-width:460px">
       <h3>Changer le mot de passe</h3>
-      <input class="field" id="newPwd" type="password" placeholder="Nouveau mot de passe" autocomplete="new-password">
-      <input class="field" id="newPwd2" type="password" placeholder="Confirmer le mot de passe" autocomplete="new-password">
+      <input class="field" id="newPwd" type="password" placeholder="Nouveau mot de passe">
+      <input class="field" id="newPwd2" type="password" placeholder="Confirmer le mot de passe">
       <div class="err" id="pwdMsg"></div>
       <button class="btn" id="btnSavePwd">Enregistrer</button>
     </div>
   </section>
 </div>
-<div class="hint" id="cfgHint" hidden>⚠️ Renseignez votre configuration Firebase dans le fichier HTML (variable firebaseConfig).</div>
 
-<!-- Polyfill Promise pour les anciens Chrome Android -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.2.8/es6-promise.auto.min.js"></script>
-<!-- SDK Firebase 8 : API compatibilité, sans modules ES -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<!-- CryptoJS évite de dépendre de Web Crypto, absent de certains anciens Chrome Android -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<div class="hint" id="cfgHint" style="display:none">⚠️ Renseignez votre configuration Firebase (apiKey et projectId) dans le fichier HTML.</div>
+
 <script>
-(function () {
-"use strict";
+/* ===== 1) COLLEZ ICI votre apiKey et votre projectId Firebase ===== */
+var CFG = { apiKey: "AIzaSyDIlYZDHrfCRSin17CbpMpbuLPbUbxcUo4", projectId: "inventaire-college" };
+/* ================================================================== */
 
-/* ===== Configuration Firebase : conserver les paramètres du projet ===== */
-var firebaseConfig = {
-  apiKey: "AIzaSyDIlYZDHrfCRSin17CbpMpbuLPbUbxcUo4",
-  authDomain: "inventaire-college.firebaseapp.com",
-  projectId: "inventaire-college",
-  storageBucket: "inventaire-college.firebasestorage.app",
-  messagingSenderId: "1001228854609",
-  appId: "1:1001228854609:web:03618db819cc4802e05f70",
-  measurementId: "G-416MJSF1D5"
-};
-/* ======================================================================= */
-
-if (!window.firebase) {
-  document.getElementById("cfgHint").hidden = false;
-  document.getElementById("cfgHint").innerHTML = "Impossible de charger Firebase. Vérifiez la connexion Internet et la compatibilité du navigateur.";
-  return;
-}
-firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
-var isAdmin = false;
-var plats = [];
-var $ = function (id) { return document.getElementById(id); };
-
-function addClass(el, name) {
-  if ((" " + el.className + " ").indexOf(" " + name + " ") === -1) el.className += (el.className ? " " : "") + name;
-}
-function removeClass(el, name) {
-  el.className = (" " + el.className + " ").replace(" " + name + " ", " ").replace(/^\s+|\s+$/g, "");
-}
-function hasClass(el, name) {
-  return (" " + el.className + " ").indexOf(" " + name + " ") !== -1;
-}
-function closest(el, selector) {
-  while (el && el.nodeType === 1) {
-    if (selector.charAt(0) === "." && hasClass(el, selector.substring(1))) return el;
-    if (selector.charAt(0) === "[" && el.hasAttribute(selector.substring(1, selector.length - 1).split("=")[0])) return el;
-    el = el.parentNode;
-  }
-  return null;
-}
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, function (c) {
-    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
-  });
-}
-function today() {
-  var d = new Date(), y = d.getFullYear(), m = d.getMonth() + 1, day = d.getDate();
-  return y + "-" + (m < 10 ? "0" : "") + m + "-" + (day < 10 ? "0" : "") + day;
-}
-function sha(t) {
-  return CryptoJS.SHA256(t).toString(CryptoJS.enc.Hex);
-}
-var cfgRef = db.collection("config").doc("admin");
+var BASE = "https://firestore.googleapis.com/v1/projects/" + CFG.projectId + "/databases/(default)/documents";
 var NOTES = [
-  {n:1,e:"😖",t:"Très mauvais",c:"#e5484d"},
-  {n:2,e:"🙁",t:"Mauvais",c:"#f08a3c"},
-  {n:3,e:"😐",t:"Moyen",c:"#f5c542"},
-  {n:4,e:"🙂",t:"Bon",c:"#8cc152"},
-  {n:5,e:"😍",t:"Très bon",c:"#2fa36b"}
+  {n:1,e:"😖",t:"Très mauvais",c:"#e5484d"},{n:2,e:"🙁",t:"Mauvais",c:"#f08a3c"},
+  {n:3,e:"😐",t:"Moyen",c:"#f5c542"},{n:4,e:"🙂",t:"Bon",c:"#8cc152"},{n:5,e:"😍",t:"Très bon",c:"#2fa36b"}
 ];
+var plats = [], isAdmin = false;
 
-/* Abonnement temps réel aux plats */
-db.collection("plats").onSnapshot(function (snap) {
-  plats = [];
-  snap.forEach(function (d) {
-    var p = d.data();
-    p.id = d.id;
-    plats.push(p);
-  });
-  plats.sort(function (a, b) {
-    return (a.nom || "").localeCompare(b.nom || "", "fr");
-  });
-  renderStudent();
-  renderAdminList();
-}, function (err) {
-  console.error("Lecture des plats impossible :", err);
-  $("empty").hidden = false;
-  $("empty").innerHTML = "Impossible de charger les plats. Vérifiez votre connexion.";
-});
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function today(){ var d=new Date(),m=d.getMonth()+1,j=d.getDate(); return d.getFullYear()+"-"+(m<10?"0":"")+m+"-"+(j<10?"0":"")+j; }
+function frDate(d){ return d.split("-").reverse().join("/"); }
+function enc(p){ return btoa(unescape(encodeURIComponent(p))); }
+if (CFG.apiKey.indexOf("VOTRE") === 0) $("cfgHint").style.display = "block";
 
-/* Écran élèves */
-function renderStudent() {
-  var actifs = plats.filter(function (p) { return p.actif; });
-  $("empty").hidden = actifs.length > 0;
-  var out = "";
-  actifs.forEach(function (p) {
-    out += '<button class="plat" data-id="' + esc(p.id) + '" aria-label="Noter ' + esc(p.nom) + '">';
-    if (p.photo) out += '<img src="' + esc(p.photo) + '" alt="">';
-    else out += '<div class="ph">🍽️</div>';
-    out += '<span class="tag">Noter</span><span class="nom">' + esc(p.nom) + '</span></button>';
-  });
-  $("grid").innerHTML = out;
+/* ---------- Accès à Firestore (API REST, sans bibliothèque) ---------- */
+function api(method, url, body, cb){
+  var x = new XMLHttpRequest();
+  url = (url.indexOf("http") === 0 ? url : BASE + url);
+  url += (url.indexOf("?") > -1 ? "&" : "?") + "key=" + CFG.apiKey;
+  x.open(method, url, true);
+  if (body) x.setRequestHeader("Content-Type", "application/json");
+  x.onreadystatechange = function(){
+    if (x.readyState !== 4) return;
+    var r = null; try { r = JSON.parse(x.responseText); } catch(e) {}
+    if (x.status >= 200 && x.status < 300) { if (cb) cb(null, r); }
+    else if (cb) cb({status: x.status, message: (r && r.error && r.error.message) || ("Erreur " + x.status)});
+  };
+  x.send(body ? JSON.stringify(body) : null);
 }
-$("grid").addEventListener("click", function (e) {
-  var b = closest(e.target, ".plat");
-  if (b) openRate(b.getAttribute("data-id"));
-});
+function val(f){ if(!f) return ""; if(f.stringValue!==undefined) return f.stringValue; if(f.booleanValue!==undefined) return f.booleanValue; if(f.integerValue!==undefined) return Number(f.integerValue); return ""; }
 
-function openRate(id) {
-  var p = null, i;
-  for (i = 0; i < plats.length; i++) if (plats[i].id === id) p = plats[i];
-  if (!p) return;
-  var out = "";
-  if (p.photo) out += '<img class="big" src="' + esc(p.photo) + '" alt="">';
-  out += '<h2>' + esc(p.nom) + '</h2><p class="q">Comment était ce plat ?</p><div class="rates">';
-  NOTES.forEach(function (x) {
-    out += '<button class="rate" data-n="' + x.n + '"><span>' + x.e + '</span>' + x.t + '</button>';
+/* ---------- Plats ---------- */
+function loadPlats(){
+  api("GET", "/plats?pageSize=300", null, function(err, r){
+    if (err) return;
+    plats = (r.documents || []).map(function(d){
+      var f = d.fields || {};
+      return {id: d.name.split("/").pop(), nom: val(f.nom), photo: val(f.photo), actif: val(f.actif) === true};
+    }).sort(function(a,b){ return a.nom.localeCompare(b.nom); });
+    renderStudent(); renderAdminList();
   });
-  out += '</div><button class="cancel" id="btnCancelRate">Retour</button>';
-  $("rateSheet").innerHTML = out;
-  addClass($("rateModal"), "on");
-  $("rateSheet").onclick = function (e) {
-    var target = e.target;
-    if (target.id === "btnCancelRate") { closeRate(); return; }
-    var r = closest(target, ".rate");
-    if (!r) return;
+}
+function findPlat(id){ for (var i=0;i<plats.length;i++) if (plats[i].id===id) return plats[i]; return null; }
+
+function renderStudent(){
+  var h = "", n = 0;
+  plats.forEach(function(p){
+    if (!p.actif) return; n++;
+    h += '<div class="cell"><button class="plat" data-id="'+p.id+'"><div class="sp"></div><div class="in">'+
+      (p.photo ? '<img src="'+p.photo+'" alt="">' : '<div class="ph">🍽️</div>')+
+      '<span class="tag">Noter</span><span class="nom">'+esc(p.nom)+'</span></div></button></div>';
+  });
+  $("grid").innerHTML = h;
+  $("empty").style.display = n ? "none" : "block";
+}
+$("grid").onclick = function(e){ var b = e.target.closest(".plat"); if (b) openRate(b.getAttribute("data-id")); };
+
+function openRate(id){
+  var p = findPlat(id); if (!p) return;
+  var h = (p.photo ? '<img class="big" src="'+p.photo+'" alt="">' : "") + '<h2>'+esc(p.nom)+'</h2><p class="q">Comment était ce plat ?</p><div class="rates">';
+  NOTES.forEach(function(x){ h += '<button class="rate" data-n="'+x.n+'"><span>'+x.e+'</span>'+x.t+'</button>'; });
+  $("rateSheet").innerHTML = h + '</div><button class="cancel" id="btnCancelRate">Retour</button>';
+  $("rateModal").className = "overlay on";
+  $("rateSheet").onclick = function(e){
+    if (e.target.id === "btnCancelRate") return closeRate();
+    var r = e.target.closest(".rate"); if (!r) return;
     $("rateSheet").onclick = null;
     $("rateSheet").innerHTML = '<div class="thanks"><div class="e">🎉</div><h2>Merci pour votre contribution !</h2></div>';
-    db.collection("notes").add({
-      platId: p.id,
-      platNom: p.nom,
-      note: Number(r.getAttribute("data-n")),
-      date: today(),
-      ts: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function () {
-      window.setTimeout(closeRate, 1000);
-    }).catch(function (err) {
-      console.error("Enregistrement de la note impossible :", err);
-      $("rateSheet").innerHTML = '<div class="thanks"><h2>Enregistrement impossible</h2><p>Vérifiez la connexion puis réessayez.</p><button class="btn" id="btnRetryClose">Fermer</button></div>';
-      $("rateSheet").onclick = function () { closeRate(); };
-    });
+    api("POST", "/notes", {fields:{
+      platId:{stringValue:p.id}, platNom:{stringValue:p.nom}, note:{integerValue:String(r.getAttribute("data-n"))}, date:{stringValue:today()}
+    }}, function(){});
+    setTimeout(closeRate, 1000);
   };
 }
-function closeRate() { removeClass($("rateModal"), "on"); }
-$("rateModal").addEventListener("click", function (e) {
-  if (e.target.id === "rateModal") closeRate();
-});
+function closeRate(){ $("rateModal").className = "overlay"; }
+$("rateModal").onclick = function(e){ if (e.target.id === "rateModal") closeRate(); };
 
-/* Connexion administrateur */
-$("btnAdmin").onclick = function () {
-  if (isAdmin) showAdmin(true);
-  else {
-    $("loginErr").textContent = "";
-    addClass($("loginModal"), "on");
-    $("pwd").focus();
-  }
-};
-$("btnCloseLogin").onclick = function () { removeClass($("loginModal"), "on"); };
-$("btnLogin").onclick = function () {
+/* ---------- Accès admin (mot de passe, 1234 par défaut) ---------- */
+$("btnAdmin").onclick = function(){ if (isAdmin) showAdmin(true); else { $("loginErr").textContent=""; $("loginModal").className="overlay on"; $("pwd").focus(); } };
+$("btnCloseLogin").onclick = function(){ $("loginModal").className = "overlay"; };
+$("btnLogin").onclick = function(){
   $("loginErr").textContent = "";
-  cfgRef.get().then(function (snap) {
-    var hash = snap.exists ? snap.data().hash : sha("1234");
-    if (sha($("pwd").value) !== hash) {
-      $("loginErr").textContent = "Mot de passe incorrect.";
-      return;
-    }
-    isAdmin = true;
-    removeClass($("loginModal"), "on");
-    $("pwd").value = "";
-    showAdmin(true);
-  }).catch(function (e) {
-    $("loginErr").textContent = "Connexion impossible : " + e.message;
+  api("GET", "/config/admin", null, function(err, r){
+    var ref;
+    if (err && err.status !== 404) { $("loginErr").textContent = "Connexion impossible : " + err.message; return; }
+    ref = err ? enc("1234") : val(r.fields.code);
+    if (enc($("pwd").value) !== ref) { $("loginErr").textContent = "Mot de passe incorrect."; return; }
+    isAdmin = true; $("loginModal").className = "overlay"; $("pwd").value = ""; showAdmin(true);
   });
 };
-$("pwd").addEventListener("keydown", function (e) {
-  if ((e.keyCode || e.which) === 13) $("btnLogin").click();
-});
-$("btnLogout").onclick = function () { isAdmin = false; showAdmin(false); };
-$("btnBack").onclick = function () { showAdmin(false); };
-
-$("btnSavePwd").onclick = function () {
+$("pwd").onkeydown = function(e){ if (e.keyCode === 13) $("btnLogin").onclick(); };
+$("btnLogout").onclick = function(){ isAdmin = false; showAdmin(false); };
+$("btnBack").onclick = function(){ showAdmin(false); };
+$("btnSavePwd").onclick = function(){
   var a = $("newPwd").value, b = $("newPwd2").value, m = $("pwdMsg");
   m.style.color = "#b42318";
   if (a.length < 4) { m.textContent = "Le mot de passe doit contenir au moins 4 caractères."; return; }
   if (a !== b) { m.textContent = "Les deux mots de passe sont différents."; return; }
-  cfgRef.set({hash:sha(a)}).then(function () {
-    $("newPwd").value = "";
-    $("newPwd2").value = "";
-    m.style.color = "#2fa36b";
-    m.textContent = "Mot de passe modifié.";
-  }).catch(function (e) {
-    m.textContent = "Modification impossible : " + e.message;
+  api("PATCH", "/config/admin", {fields:{code:{stringValue:enc(a)}}}, function(err){
+    if (err) { m.textContent = "Modification impossible : " + err.message; return; }
+    $("newPwd").value = ""; $("newPwd2").value = ""; m.style.color = "#2fa36b"; m.textContent = "Mot de passe modifié.";
   });
 };
-
-function showAdmin(on) {
+function showAdmin(on){
   if (on && !isAdmin) return;
-  if (on) addClass($("admin"), "on");
-  else removeClass($("admin"), "on");
+  $("admin").className = on ? "on" : "";
   $("student").style.display = on ? "none" : "";
-  if (on) {
-    renderAdminList();
-    if (!$("statDate").value) $("statDate").value = today();
-    loadStats();
-  }
+  if (on) { renderAdminList(); if (!$("statDate").value) $("statDate").value = today(); loadStats(); }
 }
 
-/* Onglets */
-var tabButtons = document.querySelectorAll(".tabs button");
-for (var ti = 0; ti < tabButtons.length; ti++) {
-  tabButtons[ti].onclick = function () {
-    var buttons = document.querySelectorAll(".tabs button");
-    for (var j = 0; j < buttons.length; j++) removeClass(buttons[j], "on");
-    addClass(this, "on");
-    $("tab-plats").hidden = this.getAttribute("data-tab") !== "plats";
-    $("tab-stats").hidden = this.getAttribute("data-tab") !== "stats";
-    $("tab-params").hidden = this.getAttribute("data-tab") !== "params";
-    if (this.getAttribute("data-tab") === "stats") loadStats();
-  };
-}
+/* ---------- Onglets ---------- */
+var tabBtns = document.querySelectorAll(".tabs button");
+Array.prototype.forEach.call(tabBtns, function(b){ b.onclick = function(){
+  var t = b.getAttribute("data-tab");
+  Array.prototype.forEach.call(tabBtns, function(x){ x.className = (x === b ? "on" : ""); });
+  ["plats","stats","params"].forEach(function(k){ $("tab-"+k).style.display = (k === t ? "block" : "none"); });
+  if (t === "stats") loadStats();
+}; });
 
-/* Photos : redimensionnement avant stockage dans Firestore */
-function fileToDataUrl(file, max) {
-  max = max || 640;
-  return new Promise(function (resolve, reject) {
+/* ---------- Photos : réduites puis stockées dans Firestore ---------- */
+function fileToDataUrl(file, cb){
+  var fr = new FileReader();
+  fr.onload = function(){
     var img = new Image();
-    var url = window.URL.createObjectURL(file);
-    img.onload = function () {
-      var k = Math.min(1, max / Math.max(img.width, img.height));
-      var c = document.createElement("canvas");
-      c.width = Math.round(img.width * k);
-      c.height = Math.round(img.height * k);
+    img.onload = function(){
+      var k = Math.min(1, 560 / Math.max(img.width, img.height)), c = document.createElement("canvas");
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
       c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-      window.URL.revokeObjectURL(url);
-      resolve(c.toDataURL("image/jpeg", 0.72));
+      cb(c.toDataURL("image/jpeg", 0.7));
     };
-    img.onerror = function () {
-      window.URL.revokeObjectURL(url);
-      reject(new Error("Image illisible"));
-    };
-    img.src = url;
-  });
+    img.src = fr.result;
+  };
+  fr.readAsDataURL(file);
 }
 
-/* Ajout d'un plat */
-$("btnAdd").onclick = function () {
-  var nom = $("newNom").value.replace(/^\s+|\s+$/g, "");
-  var f = $("newPhoto").files && $("newPhoto").files[0];
+/* ---------- Gestion des plats ---------- */
+$("btnAdd").onclick = function(){
+  var nom = $("newNom").value.replace(/^\s+|\s+$/g, ""), f = $("newPhoto").files[0];
   $("addErr").textContent = "";
   if (!nom) { $("addErr").textContent = "Indiquez le nom du plat."; return; }
-  var photoPromise = f ? fileToDataUrl(f) : Promise.resolve("");
-  photoPromise.then(function (photo) {
-    return db.collection("plats").add({
-      nom:nom, photo:photo, actif:true,
-      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  function save(photo){
+    api("POST", "/plats", {fields:{nom:{stringValue:nom}, photo:{stringValue:photo}, actif:{booleanValue:true}}}, function(err){
+      if (err) { $("addErr").textContent = "Ajout impossible : " + err.message; return; }
+      $("newNom").value = ""; $("newPhoto").value = ""; loadPlats();
     });
-  }).then(function () {
-    $("newNom").value = "";
-    $("newPhoto").value = "";
-  }).catch(function (e) {
-    $("addErr").textContent = "Ajout impossible : " + e.message;
+  }
+  if (f) fileToDataUrl(f, save); else save("");
+};
+function patchPlat(id, field, value){
+  var fields = {}; fields[field] = value;
+  api("PATCH", "/plats/" + id + "?updateMask.fieldPaths=" + field, {fields: fields}, loadPlats);
+}
+function renderAdminList(){
+  if ($("admin").className !== "on") return;
+  var h = "";
+  plats.forEach(function(p){
+    h += '<div class="row">'+(p.photo ? '<img class="thumb" src="'+p.photo+'" alt="">' : '<div class="thumb">🍽️</div>')+
+      '<strong>'+esc(p.nom)+'</strong><div class="acts">'+
+      '<button class="sw '+(p.actif?"on":"")+'" data-act="toggle" data-id="'+p.id+'"><i></i>'+(p.actif?"Au menu":"Masqué")+'</button>'+
+      '<label class="btn sec">Photo<input type="file" accept="image/*" style="display:none" data-act="photo" data-id="'+p.id+'"></label>'+
+      '<button class="btn sec" data-act="rename" data-id="'+p.id+'">Renommer</button>'+
+      '<button class="btn danger" data-act="del" data-id="'+p.id+'">Supprimer</button></div></div>';
   });
+  $("platList").innerHTML = h || '<p class="empty">Aucun plat pour l’instant.</p>';
+}
+$("platList").onclick = function(e){
+  var b = e.target.closest("[data-act]"); if (!b || b.type === "file") return;
+  var p = findPlat(b.getAttribute("data-id")), a = b.getAttribute("data-act"); if (!p) return;
+  if (a === "toggle") patchPlat(p.id, "actif", {booleanValue: !p.actif});
+  if (a === "rename") { var n = prompt("Nouveau nom du plat :", p.nom); if (n && n.replace(/\s/g,"")) patchPlat(p.id, "nom", {stringValue: n}); }
+  if (a === "del" && confirm("Supprimer « " + p.nom + " » ? Les notes déjà enregistrées sont conservées.")) api("DELETE", "/plats/" + p.id, null, loadPlats);
+};
+$("platList").onchange = function(e){
+  var t = e.target; if (t.getAttribute("data-act") !== "photo" || !t.files[0]) return;
+  fileToDataUrl(t.files[0], function(d){ patchPlat(t.getAttribute("data-id"), "photo", {stringValue: d}); });
 };
 
-/* Liste des plats dans l'administration */
-function renderAdminList() {
-  if (!hasClass($("admin"), "on")) return;
-  var out = "";
-  if (!plats.length) out = '<p class="empty">Aucun plat pour l’instant. Ajoutez-en un ci-dessus.</p>';
-  plats.forEach(function (p) {
-    out += '<div class="row">';
-    if (p.photo) out += '<img class="thumb" src="' + esc(p.photo) + '" alt="">';
-    else out += '<div class="thumb">🍽️</div>';
-    out += '<strong>' + esc(p.nom) + '</strong><div class="acts">';
-    out += '<button class="sw ' + (p.actif ? "on" : "") + '" data-act="toggle" data-id="' + esc(p.id) + '"><i></i>' + (p.actif ? "Au menu" : "Masqué") + '</button>';
-    out += '<label class="btn sec">Photo<input type="file" accept="image/*" style="display:none" data-act="photo" data-id="' + esc(p.id) + '"></label>';
-    out += '<button class="btn sec" data-act="rename" data-id="' + esc(p.id) + '">Renommer</button>';
-    out += '<button class="btn danger" data-act="del" data-id="' + esc(p.id) + '">Supprimer</button>';
-    out += '</div></div>';
+/* ---------- Statistiques ---------- */
+function queryNotes(d, cb){
+  var sq = {from:[{collectionId:"notes"}]};
+  if (d) sq.where = {fieldFilter:{field:{fieldPath:"date"}, op:"EQUAL", value:{stringValue:d}}};
+  api("POST", ":runQuery", {structuredQuery: sq}, function(err, r){
+    if (err) return cb(err);
+    cb(null, (r || []).filter(function(x){ return x.document; }).map(function(x){ return x.document; }));
   });
-  $("platList").innerHTML = out;
 }
-$("platList").addEventListener("click", function (e) {
-  var b = closest(e.target, "[data-act]");
-  if (!b || b.getAttribute("data-act") === "photo") return;
-  var id = b.getAttribute("data-id"), p = null;
-  for (var i = 0; i < plats.length; i++) if (plats[i].id === id) p = plats[i];
-  if (!p) return;
-  if (b.getAttribute("data-act") === "toggle") {
-    db.collection("plats").doc(p.id).update({actif:!p.actif}).catch(showAdminError);
-  }
-  if (b.getAttribute("data-act") === "rename") {
-    var n = window.prompt("Nouveau nom du plat :", p.nom);
-    if (n && n.replace(/^\s+|\s+$/g, "")) {
-      db.collection("plats").doc(p.id).update({nom:n.replace(/^\s+|\s+$/g, "")}).catch(showAdminError);
-    }
-  }
-  if (b.getAttribute("data-act") === "del" && window.confirm("Supprimer « " + p.nom + " » ? Les notes déjà enregistrées sont conservées.")) {
-    db.collection("plats").doc(p.id).delete().catch(showAdminError);
-  }
-});
-function showAdminError(e) { window.alert("Opération impossible : " + e.message); }
-$("platList").addEventListener("change", function (e) {
-  var input = e.target;
-  if (input.getAttribute("data-act") !== "photo" || !input.files || !input.files[0]) return;
-  var id = input.getAttribute("data-id");
-  fileToDataUrl(input.files[0]).then(function (photo) {
-    return db.collection("plats").doc(id).update({photo:photo});
-  }).catch(function (err) { showAdminError(err); });
-});
-
-/* Statistiques */
 $("statDate").onchange = loadStats;
-$("btnAll").onclick = function () { $("statDate").value = ""; loadStats(); };
-$("btnClear").onclick = function () {
+$("btnAll").onclick = function(){ $("statDate").value = ""; loadStats(); };
+$("btnClear").onclick = function(){
   var d = $("statDate").value;
-  var msg = d ? "Effacer définitivement toutes les notes du " + d.split("-").reverse().join("/") + " ?" : "Effacer définitivement TOUTES les notes de toutes les dates ?";
-  if (!window.confirm(msg)) return;
-  var q = d ? db.collection("notes").where("date", "==", d) : db.collection("notes");
-  q.get().then(function (snap) {
-    var batch = db.batch();
-    snap.forEach(function (doc) { batch.delete(doc.ref); });
-    return batch.commit();
-  }).then(loadStats).catch(function (e) {
-    window.alert("Suppression impossible : " + e.message);
-    loadStats();
+  if (!confirm(d ? "Effacer définitivement toutes les notes du " + frDate(d) + " ?" : "Effacer définitivement TOUTES les notes de toutes les dates ?")) return;
+  queryNotes(d, function(err, docs){
+    if (err) { alert("Suppression impossible : " + err.message); return; }
+    var left = docs.length; if (!left) return loadStats();
+    docs.forEach(function(x){ api("DELETE", "https://firestore.googleapis.com/v1/" + x.name, null, function(){ if (--left === 0) loadStats(); }); });
   });
 };
-
-function loadStats() {
+function loadStats(){
   var d = $("statDate").value;
-  $("btnClear").textContent = d ? "Effacer les stats du " + d.split("-").reverse().join("/") : "Effacer toutes les stats";
+  $("btnClear").textContent = d ? "Effacer les stats du " + frDate(d) : "Effacer toutes les stats";
   $("statList").innerHTML = '<p class="empty">Chargement…</p>';
-  var q = d ? db.collection("notes").where("date", "==", d) : db.collection("notes");
-  q.get().then(function (snap) {
-    var by = {};
-    snap.forEach(function (s) {
-      var x = s.data();
-      var key = x.platId;
-      if (!by[key]) by[key] = {nom:x.platNom,c:[0,0,0,0,0],n:0,sum:0};
-      by[key].c[x.note - 1]++;
-      by[key].n++;
-      by[key].sum += x.note;
+  queryNotes(d, function(err, docs){
+    if (err) { $("statList").innerHTML = '<p class="err">Lecture impossible : ' + esc(err.message) + '</p>'; return; }
+    var by = {}, ids = [];
+    docs.forEach(function(x){
+      var f = x.fields, id = val(f.platId), n = val(f.note), o = by[id];
+      if (!o) { o = by[id] = {nom: val(f.platNom), c:[0,0,0,0,0], n:0, sum:0}; ids.push(id); }
+      o.c[n-1]++; o.n++; o.sum += n;
     });
-    var ids = Object.keys(by);
-    ids.sort(function (a, b) {
-      return by[b].sum / by[b].n - by[a].sum / by[a].n;
-    });
-    if (!ids.length) {
-      $("statList").innerHTML = '<p class="empty">Aucune note ' + (d ? "à cette date" : "pour l’instant") + '.</p>';
-      return;
-    }
-    var out = "";
-    ids.forEach(function (id) {
-      var o = by[id], p = null, m = o.sum / o.n;
-      for (var i = 0; i < plats.length; i++) if (plats[i].id === id) p = plats[i];
-      out += '<div class="stat"><div class="top">';
-      if (p && p.photo) out += '<img class="thumb" src="' + esc(p.photo) + '" alt="">';
-      else out += '<div class="thumb">🍽️</div>';
-      out += '<div class="avg">' + m.toFixed(1).replace(".", ",") + ' / 5<small>' + o.n + ' vote' + (o.n > 1 ? "s" : "") + '</small></div>';
-      out += '<strong style="display:block;padding-top:18px;overflow:hidden">' + esc(p ? p.nom : o.nom) + '</strong></div>';
-      out += '<div class="dist">';
-      o.c.forEach(function (v, i) {
-        if (v) out += '<div style="width:' + (v / o.n * 100) + '%;background:' + NOTES[i].c + '"></div>';
+    if (!ids.length) { $("statList").innerHTML = '<p class="empty">Aucune note ' + (d ? "à cette date" : "pour l’instant") + '.</p>'; return; }
+    ids.sort(function(a,b){ return by[b].sum/by[b].n - by[a].sum/by[a].n; });
+    var h = "";
+    ids.forEach(function(id){
+      var o = by[id], p = findPlat(id), m = o.sum / o.n, bar = "", leg = "";
+      NOTES.forEach(function(x,i){
+        if (o.c[i]) bar += '<div style="width:'+(o.c[i]/o.n*100)+'%;background:'+x.c+'"></div>';
+        leg += '<span><i class="dot" style="background:'+x.c+'"></i>'+x.t+' : <b>'+o.c[i]+'</b></span>';
       });
-      out += '</div><div class="legend">';
-      NOTES.forEach(function (x, i) {
-        out += '<span><i class="dot" style="background:' + x.c + '"></i>' + x.t + ' : <b>' + o.c[i] + '</b></span> &nbsp; ';
-      });
-      out += '</div></div>';
+      h += '<div class="stat"><div class="top">'+(p && p.photo ? '<img class="thumb" src="'+p.photo+'" alt="">' : '<div class="thumb">🍽️</div>')+
+        '<strong>'+esc(p ? p.nom : o.nom)+'</strong><div class="avg">'+m.toFixed(1).replace(".",",")+' / 5<small>'+o.n+' vote'+(o.n>1?"s":"")+'</small></div></div>'+
+        '<div class="dist">'+bar+'</div><div class="legend">'+leg+'</div></div>';
     });
-    $("statList").innerHTML = out;
-  }).catch(function (e) {
-    $("statList").innerHTML = '<p class="err">Lecture impossible : ' + esc(e.message) + '</p>';
+    $("statList").innerHTML = h;
   });
 }
-}());
+
+loadPlats();
+setInterval(loadPlats, 30000); // l'écran élèves se met à jour tout seul
 </script>
 </body>
 </html>
