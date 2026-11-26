@@ -224,12 +224,14 @@ function renderStudent(){
 }
 function layout(){
   var cells = $("grid").children, n = cells.length; if (!n) return;
-  var W = window.innerWidth, H = window.innerHeight, best = 1, bs = -1, c, r, a, s, i;
+  var W = window.innerWidth || document.documentElement.clientWidth, H = window.innerHeight || document.documentElement.clientHeight;
+  var best = 1, bs = -1, c, r, a, s, i;
   for (c = 1; c <= n; c++) { r = Math.ceil(n / c); a = (W / c) / (H / r); s = Math.min(a, 1 / a); if (s > bs) { bs = s; best = c; } }
   r = Math.ceil(n / best);
-  for (i = 0; i < n; i++) { cells[i].style.flex = "1 0 " + (100 / best - 0.5) + "%"; cells[i].style.height = (100 / r) + "%"; }
+  $("grid").style.height = H + "px";
+  for (i = 0; i < n; i++) { cells[i].style.flex = "1 0 " + (Math.floor(W / best) - 1) + "px"; cells[i].style.height = Math.floor(H / r) + "px"; }
 }
-window.onresize = layout;
+window.onresize = layout; window.onorientationchange = function(){ setTimeout(layout, 300); };
 $("grid").onclick = function(e){ var b = up(e.target || e.srcElement, null, "plat"); if (b) openRate(b.getAttribute("data-id")); };
 
 function openRate(id){
