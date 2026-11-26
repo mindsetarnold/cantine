@@ -168,6 +168,13 @@ var NOTES = [
 ];
 var plats = [], isAdmin = false;
 
+function up(el, attr, cls){
+  while (el && el.nodeType === 1) {
+    if (attr ? el.getAttribute(attr) !== null : (" " + el.className + " ").indexOf(" " + cls + " ") > -1) return el;
+    el = el.parentNode;
+  }
+  return null;
+}
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function today(){ var d=new Date(),m=d.getMonth()+1,j=d.getDate(); return d.getFullYear()+"-"+(m<10?"0":"")+m+"-"+(j<10?"0":"")+j; }
@@ -216,7 +223,7 @@ function renderStudent(){
   $("grid").innerHTML = h;
   $("empty").style.display = n ? "none" : "block";
 }
-$("grid").onclick = function(e){ var b = e.target.closest(".plat"); if (b) openRate(b.getAttribute("data-id")); };
+$("grid").onclick = function(e){ var b = up(e.target || e.srcElement, null, "plat"); if (b) openRate(b.getAttribute("data-id")); };
 
 function openRate(id){
   var p = findPlat(id); if (!p) return;
@@ -226,7 +233,7 @@ function openRate(id){
   $("rateModal").className = "overlay on";
   $("rateSheet").onclick = function(e){
     if (e.target.id === "btnCancelRate") return closeRate();
-    var r = e.target.closest(".rate"); if (!r) return;
+    var r = up(e.target || e.srcElement, null, "rate"); if (!r) return;
     $("rateSheet").onclick = null;
     $("rateSheet").innerHTML = '<div class="thanks"><div class="e">🎉</div><h2>Merci pour votre contribution !</h2></div>';
     api("POST", "/notes", {fields:{
@@ -327,7 +334,7 @@ function renderAdminList(){
   $("platList").innerHTML = h || '<p class="empty">Aucun plat pour l’instant.</p>';
 }
 $("platList").onclick = function(e){
-  var b = e.target.closest("[data-act]"); if (!b || b.type === "file") return;
+  var b = up(e.target || e.srcElement, "data-act"); if (!b || b.type === "file") return;
   var p = findPlat(b.getAttribute("data-id")), a = b.getAttribute("data-act"); if (!p) return;
   if (a === "toggle") patchPlat(p.id, "actif", {booleanValue: !p.actif});
   if (a === "rename") { var n = prompt("Nouveau nom du plat :", p.nom); if (n && n.replace(/\s/g,"")) patchPlat(p.id, "nom", {stringValue: n}); }
