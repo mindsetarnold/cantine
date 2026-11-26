@@ -10,20 +10,17 @@
 body{font-family:Roboto,Arial,sans-serif;background:#f2f7f4;color:#14281f;min-height:100%}
 h1,h2,h3{line-height:1.15;font-weight:bold}
 button{font:inherit;cursor:pointer;border:0;color:inherit;background:none}
-header{display:flex;justify-content:space-between;align-items:center;padding:18px 24px}
-header h1{font-size:28px}
-.adminlink{color:#5b6e64;font-size:14px;padding:8px 12px;border-radius:20px}
-main{padding:0 14px 40px}
-.lead{color:#5b6e64;font-size:18px;margin:0 10px 16px}
-.grid{display:flex;flex-wrap:wrap}
-.cell{width:25%;padding:10px}
-.plat{display:block;width:100%;position:relative;border-radius:24px;overflow:hidden;background:#14532d;box-shadow:0 4px 14px rgba(20,40,31,.25);text-align:left;padding:0}
-.plat .sp{padding-top:125%}
+#student{position:fixed;top:0;left:0;right:0;bottom:0;background:#0f1f17}
+.adminlink{position:fixed;right:10px;bottom:10px;z-index:5;color:#fff;background:rgba(0,0,0,.4);font-size:13px;padding:8px 14px;border-radius:20px}
+.grid{display:flex;flex-wrap:wrap;align-content:flex-start;width:100%;height:100%}
+.cell{position:relative;padding:5px}
+.plat{display:block;position:absolute;top:5px;left:5px;right:5px;bottom:5px;border-radius:26px;overflow:hidden;background:#14532d;text-align:left;padding:0}
 .plat .in{position:absolute;top:0;left:0;right:0;bottom:0}
 .plat img{width:100%;height:100%;object-fit:cover;display:block}
-.plat .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:64px;background:#1c6b3c}
-.plat .nom{position:absolute;left:0;right:0;bottom:0;padding:50px 16px 16px;background:linear-gradient(transparent,rgba(10,25,16,.88));color:#fff;font-weight:bold;font-size:22px}
-.plat .tag{position:absolute;top:12px;right:12px;background:#ffc93c;color:#14281f;font-weight:bold;font-size:13px;padding:5px 11px;border-radius:20px}
+.plat .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20vmin;background:#1c6b3c}
+.plat .nom{position:absolute;left:0;right:0;bottom:0;padding:12vmin 3vmin 3.5vmin;background:linear-gradient(transparent,rgba(10,25,16,.9));color:#fff;font-weight:bold;font-size:5.5vmin}
+.plat .tag{position:absolute;top:2.5vmin;right:2.5vmin;background:#ffc93c;color:#14281f;font-weight:bold;font-size:2.6vmin;padding:1vmin 2.4vmin;border-radius:30px}
+#student .empty{display:none;position:absolute;top:0;left:0;right:0;bottom:0;align-items:center;justify-content:center;color:#fff;font-size:4vmin;padding:30px}
 .empty{text-align:center;padding:50px 20px;color:#5b6e64;font-size:18px}
 .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,25,16,.65);display:none;align-items:center;justify-content:center;padding:14px;z-index:10;overflow:auto}
 .overlay.on{display:flex}
@@ -31,14 +28,22 @@ main{padding:0 14px 40px}
 .sheet .big{width:100%;height:220px;object-fit:cover;border-radius:18px;margin-bottom:14px;background:#14532d;display:block}
 .sheet h2{font-size:26px;margin-bottom:4px}
 .q{color:#5b6e64;margin-bottom:16px}
-.rates{display:flex}
-.rate{flex:1;margin:0 4px;background:#f2f7f4;border-radius:18px;padding:12px 2px;text-align:center;font-size:12px;font-weight:bold;border:3px solid transparent}
-.rate span{display:block;font-size:34px;margin-bottom:4px}
-.rate:active{border-color:#2fa36b}
-.cancel{margin-top:14px;color:#5b6e64;padding:8px}
-.thanks{text-align:center;padding:40px 20px}
-.thanks .e{font-size:68px}
-.thanks h2{font-size:30px;margin-top:8px}
+.sheet.full{max-width:none;height:100%;border-radius:0;padding:0;display:flex;flex-direction:column;overflow:hidden;background:#0f1f17}
+#rateModal{padding:0;align-items:stretch}
+.hd{position:relative;flex:0 0 30%;background:#14532d;overflow:hidden}
+.hd img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.hd .shade{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(rgba(10,25,16,.35),rgba(10,25,16,.8))}
+.hd h2{position:absolute;left:4vmin;right:4vmin;bottom:3vmin;color:#fff;font-size:7vmin;margin:0}
+.cancel{position:absolute;top:2.5vmin;left:3vmin;z-index:2;background:rgba(0,0,0,.45);color:#fff;font-size:3vmin;font-weight:bold;padding:1.5vmin 3vmin;border-radius:30px;margin:0}
+.rates{flex:1;display:flex;padding:1.5vmin}
+.rate{flex:1;margin:1.5vmin;border-radius:5vmin;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:bold;border:0}
+.rate b{font-size:24vmin;line-height:1}
+.rate small{font-size:3.4vmin;margin-top:1.5vmin}
+.rate[data-n="1"]{background:#e5484d}.rate[data-n="2"]{background:#f08a3c}
+.rate[data-n="3"]{background:#f5d02e;color:#14281f}.rate[data-n="4"]{background:#8cc152;color:#14281f}.rate[data-n="5"]{background:#14803f}
+.thanks{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#14803f;color:#fff;text-align:center;padding:20px}
+.thanks .e{font-size:22vmin}
+.thanks h2{font-size:7vmin;margin-top:3vmin}
 .field{display:block;width:100%;padding:12px;border-radius:12px;border:2px solid #d9e5de;font:inherit;margin-bottom:10px;background:#fff}
 .btn{display:inline-block;background:#14532d;color:#fff;padding:11px 18px;border-radius:12px;font-weight:bold;margin:2px}
 .btn.sec{background:#e3eee8;color:#14281f}
@@ -77,25 +82,18 @@ main{padding:0 14px 40px}
 .filters>*{margin:0 8px 8px 0}
 .filters .field{width:auto}
 .hint{background:#fff6d6;border-radius:12px;padding:14px;font-size:14px;margin:20px}
-@media(max-width:900px){.cell{width:33.33%}}
-@media(max-width:640px){.cell{width:50%}.rate{font-size:10px}.rate span{font-size:26px}header h1{font-size:22px}}
+@media(orientation:portrait){.rates{flex-direction:column}.rate b{font-size:13vmin}.rate small{font-size:3vmin}.hd{flex:0 0 26%}}
 </style>
 </head>
 <body>
 
 <div id="student">
-  <header>
-    <h1>Qu’avez-vous pensé du repas ?</h1>
-    <button class="adminlink" id="btnAdmin">Espace admin</button>
-  </header>
-  <main>
-    <p class="lead">Touchez un plat pour lui donner une note.</p>
-    <div class="grid" id="grid"></div>
-    <div class="empty" id="empty" style="display:none">Aucun plat à noter pour le moment. Revenez à la prochaine pause déjeuner !</div>
-  </main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty">Aucun plat à noter pour le moment.<br>Revenez à la prochaine pause déjeuner !</div>
+  <button class="adminlink" id="btnAdmin">Espace admin</button>
 </div>
 
-<div class="overlay" id="rateModal"><div class="sheet" id="rateSheet"></div></div>
+<div class="overlay" id="rateModal"><div class="sheet full" id="rateSheet"></div></div>
 
 <div class="overlay" id="loginModal">
   <div class="sheet" style="max-width:420px">
@@ -216,34 +214,44 @@ function renderStudent(){
   var h = "", n = 0;
   plats.forEach(function(p){
     if (!p.actif) return; n++;
-    h += '<div class="cell"><button class="plat" data-id="'+p.id+'"><div class="sp"></div><div class="in">'+
+    h += '<div class="cell"><button class="plat" data-id="'+p.id+'"><div class="in">'+
       (p.photo ? '<img src="'+p.photo+'" alt="">' : '<div class="ph">🍽️</div>')+
-      '<span class="tag">Noter</span><span class="nom">'+esc(p.nom)+'</span></div></button></div>';
+      '<span class="tag">Touchez pour noter</span><span class="nom">'+esc(p.nom)+'</span></div></button></div>';
   });
   $("grid").innerHTML = h;
-  $("empty").style.display = n ? "none" : "block";
+  $("empty").style.display = n ? "none" : "flex";
+  layout();
 }
+function layout(){
+  var cells = $("grid").children, n = cells.length; if (!n) return;
+  var W = window.innerWidth, H = window.innerHeight, best = 1, bs = -1, c, r, a, s, i;
+  for (c = 1; c <= n; c++) { r = Math.ceil(n / c); a = (W / c) / (H / r); s = Math.min(a, 1 / a); if (s > bs) { bs = s; best = c; } }
+  r = Math.ceil(n / best);
+  for (i = 0; i < n; i++) { cells[i].style.flex = "1 0 " + (100 / best - 0.5) + "%"; cells[i].style.height = (100 / r) + "%"; }
+}
+window.onresize = layout;
 $("grid").onclick = function(e){ var b = up(e.target || e.srcElement, null, "plat"); if (b) openRate(b.getAttribute("data-id")); };
 
 function openRate(id){
   var p = findPlat(id); if (!p) return;
-  var h = (p.photo ? '<img class="big" src="'+p.photo+'" alt="">' : "") + '<h2>'+esc(p.nom)+'</h2><p class="q">Comment était ce plat ?</p><div class="rates">';
-  NOTES.forEach(function(x){ h += '<button class="rate" data-n="'+x.n+'"><span>'+x.e+'</span>'+x.t+'</button>'; });
-  $("rateSheet").innerHTML = h + '</div><button class="cancel" id="btnCancelRate">Retour</button>';
+  var h = '<div class="hd">' + (p.photo ? '<img src="'+p.photo+'" alt="">' : '') + '<div class="shade"></div><button class="cancel" id="btnCancelRate">← Retour</button><h2>'+esc(p.nom)+'</h2></div><div class="rates">';
+  NOTES.forEach(function(x){ h += '<button class="rate" data-n="'+x.n+'"><b>'+x.n+'</b><small>'+x.t+'</small></button>'; });
+  $("rateSheet").innerHTML = h + '</div>';
   $("rateModal").className = "overlay on";
   $("rateSheet").onclick = function(e){
-    if (e.target.id === "btnCancelRate") return closeRate();
-    var r = up(e.target || e.srcElement, null, "rate"); if (!r) return;
+    var t = e.target || e.srcElement;
+    if (t.id === "btnCancelRate") return closeRate();
+    var r = up(t, null, "rate"); if (!r) return;
     $("rateSheet").onclick = null;
     $("rateSheet").innerHTML = '<div class="thanks"><div class="e">🎉</div><h2>Merci pour votre contribution !</h2></div>';
     api("POST", "/notes", {fields:{
       platId:{stringValue:p.id}, platNom:{stringValue:p.nom}, note:{integerValue:String(r.getAttribute("data-n"))}, date:{stringValue:today()}
     }}, function(){});
-    setTimeout(closeRate, 1000);
+    setTimeout(closeRate, 500);
   };
 }
 function closeRate(){ $("rateModal").className = "overlay"; }
-$("rateModal").onclick = function(e){ if (e.target.id === "rateModal") closeRate(); };
+
 
 /* ---------- Accès admin (mot de passe, 1234 par défaut) ---------- */
 $("btnAdmin").onclick = function(){ if (isAdmin) showAdmin(true); else { $("loginErr").textContent=""; $("loginModal").className="overlay on"; $("pwd").focus(); } };
