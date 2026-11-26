@@ -2,93 +2,110 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Cantine – Notez votre repas</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f2f7f4;--ink:#14281f;--mut:#5b6e64;--card:#fff;--sun:#ffc93c;--forest:#14532d;--line:#d9e5de;
---r1:#e5484d;--r2:#f08a3c;--r3:#f5c542;--r4:#8cc152;--r5:#2fa36b}
-*{box-sizing:border-box;margin:0}
-body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
-h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.1}
-button{font:inherit;cursor:pointer;border:0;color:inherit}
-:focus-visible{outline:3px solid var(--forest);outline-offset:3px}
-header{display:flex;justify-content:space-between;align-items:center;padding:20px clamp(16px,4vw,48px)}
-header h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800}
-.adminlink{background:none;color:var(--mut);font-size:.85rem;padding:8px 12px;border-radius:99px}
-.adminlink:hover{background:#e3eee8}
-main{padding:0 clamp(16px,4vw,48px) 48px}
-.lead{color:var(--mut);font-size:1.1rem;margin-bottom:24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
-.plat{position:relative;aspect-ratio:4/5;border-radius:28px;overflow:hidden;background:var(--forest);text-align:left;box-shadow:0 6px 20px rgba(20,40,31,.15);transition:transform .15s}
-.plat:hover{transform:translateY(-4px)}
+/* Version rétrocompatible : pas de variables CSS, Grid, clamp(), gap ou aspect-ratio */
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
+body{font-family:Arial,Helvetica,sans-serif;background:#f2f7f4;color:#14281f;min-height:100%;font-size:16px}
+h1,h2,h3{font-family:Arial,Helvetica,sans-serif;line-height:1.2}
+button{font:inherit;cursor:pointer;border:0;color:inherit;-webkit-appearance:none}
+button:focus,input:focus{outline:2px solid #14532d;outline-offset:2px}
+header{display:block;padding:20px 4%;overflow:hidden}
+header h1{font-size:30px;font-weight:bold;float:left;max-width:75%}
+.adminlink{background:none;color:#5b6e64;font-size:14px;padding:9px 12px;border-radius:20px;float:right}
+main{padding:0 4% 48px}
+.lead{color:#5b6e64;font-size:18px;margin:0 0 24px}
+.grid{font-size:0;text-align:left}
+.plat{position:relative;display:inline-block;vertical-align:top;width:31.3%;margin:0 1% 18px 0;height:300px;border-radius:20px;overflow:hidden;background:#14532d;text-align:left;box-shadow:0 5px 15px rgba(20,40,31,.15)}
 .plat img{width:100%;height:100%;object-fit:cover;display:block}
-.plat .ph{width:100%;height:100%;display:grid;place-items:center;font-size:5rem;background:linear-gradient(135deg,#1c6b3c,#14532d)}
-.plat .nom{position:absolute;inset:auto 0 0 0;padding:60px 20px 20px;background:linear-gradient(transparent,rgba(10,25,16,.85));color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:1.5rem}
-.plat .tag{position:absolute;top:14px;right:14px;background:var(--sun);color:var(--ink);font-weight:700;font-size:.85rem;padding:6px 12px;border-radius:99px}
-.empty{text-align:center;padding:60px 20px;color:var(--mut);font-size:1.1rem}
-.overlay{position:fixed;inset:0;background:rgba(10,25,16,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:10;overflow:auto}
-.overlay.on{display:flex}
-.sheet{background:var(--card);border-radius:32px;padding:28px;width:min(640px,100%);animation:pop .2s ease-out}
-@keyframes pop{from{transform:scale(.95);opacity:0}}
-.sheet .big{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:20px;margin-bottom:18px;background:var(--forest)}
-.sheet h2{font-size:1.8rem;margin-bottom:4px}
-.sheet p.q{color:var(--mut);margin-bottom:18px}
-.rates{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.rate{background:var(--bg);border-radius:20px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.8rem;font-weight:700;border:3px solid transparent;transition:.12s}
-.rate span{font-size:2.2rem}
-.rate:hover{transform:scale(1.06)}
-.rate[data-n="1"]:hover{border-color:var(--r1)}.rate[data-n="2"]:hover{border-color:var(--r2)}
-.rate[data-n="3"]:hover{border-color:var(--r3)}.rate[data-n="4"]:hover{border-color:var(--r4)}.rate[data-n="5"]:hover{border-color:var(--r5)}
-.cancel{margin-top:16px;background:none;color:var(--mut);padding:8px}
-.thanks{text-align:center;padding:48px 28px}
-.thanks .e{font-size:4.5rem}
-.thanks h2{font-size:2.2rem;margin-top:8px}
-.field{display:block;width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--line);font:inherit;margin-bottom:10px;background:#fff}
-.btn{background:var(--forest);color:#fff;padding:12px 20px;border-radius:14px;font-weight:700}
-.btn.sec{background:#e3eee8;color:var(--ink)}
+.plat .ph{width:100%;height:100%;text-align:center;padding-top:100px;font-size:64px;background:#1c6b3c;color:#fff}
+.plat .nom{position:absolute;left:0;right:0;bottom:0;padding:50px 16px 18px;background:#183c29;color:#fff;font-weight:bold;font-size:22px}
+.plat .tag{position:absolute;top:12px;right:12px;background:#ffc93c;color:#14281f;font-weight:bold;font-size:14px;padding:7px 12px;border-radius:20px}
+.empty{text-align:center;padding:50px 20px;color:#5b6e64;font-size:18px}
+.overlay{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(10,25,16,.75);display:none;z-index:10;overflow:auto;padding:16px;text-align:center}
+.overlay.on{display:block}
+.overlay:before{content:"";display:inline-block;height:100%;vertical-align:middle}
+.sheet{display:inline-block;vertical-align:middle;text-align:left;background:#fff;border-radius:24px;padding:24px;width:100%;max-width:640px;margin:12px auto}
+.sheet .big{width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:16px;background:#14532d}
+.sheet h2{font-size:28px;margin-bottom:5px}
+.sheet p.q{color:#5b6e64;margin-bottom:18px}
+.rates{overflow:hidden;text-align:center}
+.rate{display:inline-block;vertical-align:top;width:18.5%;margin:0 .5% 8px;background:#f2f7f4;border-radius:14px;padding:12px 2px;font-size:12px;font-weight:bold;border:2px solid transparent}
+.rate span{display:block;font-size:30px;margin-bottom:5px}
+.cancel{margin-top:12px;background:none;color:#5b6e64;padding:10px}
+.thanks{text-align:center;padding:40px 18px}
+.thanks .e{font-size:64px}
+.thanks h2{font-size:28px;margin-top:8px}
+.field{display:block;width:100%;padding:12px 14px;border-radius:10px;border:2px solid #d9e5de;font:inherit;margin-bottom:10px;background:#fff;min-height:44px}
+.btn{display:inline-block;background:#14532d;color:#fff;padding:12px 18px;border-radius:10px;font-weight:bold;min-height:42px}
+.btn.sec{background:#e3eee8;color:#14281f}
 .btn.danger{background:#fde8e8;color:#b42318}
-.err{color:#b42318;font-size:.9rem;min-height:1.2em;margin-bottom:8px}
-/* admin */
-#admin{display:none;max-width:1000px;margin:0 auto;padding:24px clamp(16px,4vw,32px) 60px}
+.err{color:#b42318;font-size:14px;min-height:20px;margin-bottom:8px}
+/* Administration */
+#admin{display:none;max-width:1000px;margin:0 auto;padding:24px 4% 60px}
 #admin.on{display:block}
-.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
-.tabs{display:flex;gap:6px;background:#e3eee8;padding:5px;border-radius:99px}
-.tabs button{background:none;padding:9px 18px;border-radius:99px;font-weight:700}
+.bar{margin-bottom:20px;overflow:hidden}
+.bar h1{font-size:28px;margin-bottom:14px}
+.tabs{display:inline-block;background:#e3eee8;padding:5px;border-radius:22px;margin:0 10px 12px 0}
+.tabs button{background:none;padding:9px 14px;border-radius:20px;font-weight:bold}
 .tabs button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12)}
-.panel{background:var(--card);border-radius:24px;padding:22px;margin-bottom:18px}
-.panel h3{font-size:1.3rem;margin-bottom:14px}
-.add{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:start}
-.add .field{margin:0}
-.row{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
-.row:first-of-type{border-top:0}
-.thumb{width:64px;height:64px;border-radius:14px;object-fit:cover;background:var(--forest);display:grid;place-items:center;font-size:1.6rem}
-.acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
-.acts .btn{padding:8px 12px;font-size:.85rem}
-.sw{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;background:none}
-.sw i{width:44px;height:26px;border-radius:99px;background:#c9d6cf;position:relative;transition:.15s}
-.sw i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.15s}
-.sw.on i{background:var(--r5)}.sw.on i::after{left:21px}
-.stat{padding:16px 0;border-top:1px solid var(--line)}
-.stat:first-of-type{border-top:0}
-.stat .top{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;margin-bottom:10px}
-.avg{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.8rem;text-align:right}
-.avg small{display:block;font-family:'DM Sans';font-weight:400;font-size:.8rem;color:var(--mut)}
-.dist{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--line)}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--mut);margin-top:8px}
-.legend b{color:var(--ink)}
+.panel{background:#fff;border-radius:18px;padding:20px;margin-bottom:16px}
+.panel h3{font-size:21px;margin-bottom:14px}
+.add{overflow:hidden}
+.add .field{float:left;width:42%;margin-right:1%}
+.add input[type=file]{width:35%}
+.add .btn{float:right}
+.row{border-top:1px solid #d9e5de;padding:12px 0;overflow:hidden}
+.row:first-child{border-top:0}
+.thumb{float:left;width:64px;height:64px;border-radius:12px;object-fit:cover;background:#14532d;text-align:center;font-size:25px;line-height:64px;margin-right:12px}
+.row strong{display:block;padding-top:8px;overflow:hidden}
+.acts{clear:both;padding-top:10px;text-align:left}
+.acts .btn{padding:8px 10px;font-size:13px;margin:3px}
+.sw{display:inline-block;vertical-align:middle;padding:8px;background:none;font-weight:bold}
+.sw i{display:inline-block;vertical-align:middle;width:40px;height:24px;border-radius:20px;background:#c9d6cf;position:relative;margin-right:6px}
+.sw i:after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.sw.on i{background:#2fa36b}
+.sw.on i:after{left:19px}
+.stat{padding:16px 0;border-top:1px solid #d9e5de;overflow:hidden}
+.stat:first-child{border-top:0}
+.stat .top{overflow:hidden;margin-bottom:10px}
+.avg{float:right;font-weight:bold;font-size:26px;text-align:right}
+.avg small{display:block;font-weight:normal;font-size:13px;color:#5b6e64}
+.dist{height:14px;border-radius:10px;overflow:hidden;background:#d9e5de;white-space:nowrap}
+.dist div{display:inline-block;height:14px}
+.legend{font-size:13px;color:#5b6e64;margin-top:8px;line-height:1.8}
+.legend b{color:#14281f}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
-.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
-.filters .field{width:auto;margin:0}
-.hint{background:#fff6d6;border-radius:14px;padding:14px;font-size:.9rem;margin:20px}
-@media(max-width:560px){.rate{font-size:.65rem}.rate span{font-size:1.7rem}.add{grid-template-columns:1fr}.row{grid-template-columns:48px 1fr}.row .acts{grid-column:1/-1;justify-content:flex-start}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.filters{margin-bottom:12px}
+.filters .field{display:inline-block;width:auto;max-width:100%;margin:5px 5px 5px 0}
+.hint{background:#fff6d6;border-radius:12px;padding:14px;font-size:14px;margin:20px}
+[hidden]{display:none!important}
+@media(max-width:700px){
+ header{padding:16px 4%}
+ header h1{float:none;max-width:none;font-size:25px;margin-bottom:8px}
+ .adminlink{float:none;padding-left:0}
+ .plat{width:48%;margin-right:1%;height:230px}
+ .plat .nom{font-size:18px;padding:40px 12px 14px}
+ .sheet{padding:18px}
+ .rate{width:18%;font-size:11px}
+ .rate span{font-size:25px}
+ .add .field,.add input[type=file]{float:none;width:100%;margin:0 0 9px}
+ .add .btn{float:none}
+ .tabs{display:block}
+ .tabs button{padding:8px 10px}
+}
+@media(max-width:380px){
+ .plat{height:190px}
+ .rate{width:18%;padding:9px 1px}
+ .rate span{font-size:21px}
+ .rate{font-size:10px}
+}
 </style>
 </head>
 <body>
-
-<!-- ============ ÉCRAN ÉLÈVES ============ -->
 <div id="student">
   <header>
     <h1>Qu’avez-vous pensé du repas ?</h1>
@@ -101,27 +118,27 @@ main{padding:0 clamp(16px,4vw,48px) 48px}
   </main>
 </div>
 
-<!-- Fenêtre de notation -->
 <div class="overlay" id="rateModal"><div class="sheet" id="rateSheet"></div></div>
-
-<!-- Connexion admin -->
 <div class="overlay" id="loginModal">
   <div class="sheet" style="max-width:420px">
-    <h2>Espace administrateur</h2><p class="q">Entrez le mot de passe pour gérer les plats.</p>
+    <h2>Espace administrateur</h2>
+    <p class="q">Entrez le mot de passe pour gérer les plats.</p>
     <input class="field" id="pwd" type="password" placeholder="Mot de passe" autocomplete="current-password">
     <div class="err" id="loginErr"></div>
-    <div style="display:flex;gap:10px"><button class="btn" id="btnLogin">Entrer</button><button class="btn sec" id="btnCloseLogin">Annuler</button></div>
+    <div><button class="btn" id="btnLogin">Entrer</button> <button class="btn sec" id="btnCloseLogin">Annuler</button></div>
   </div>
 </div>
 
-<!-- ============ ESPACE ADMIN ============ -->
 <div id="admin">
   <div class="bar">
     <h1>Espace admin</h1>
-    <div class="tabs"><button class="on" data-tab="plats">Plats du jour</button><button data-tab="stats">Statistiques</button><button data-tab="params">Paramètres</button></div>
-    <div style="display:flex;gap:8px"><button class="btn sec" id="btnBack">Voir l’écran élèves</button><button class="btn sec" id="btnLogout">Verrouiller</button></div>
+    <div class="tabs">
+      <button class="on" data-tab="plats">Plats du jour</button>
+      <button data-tab="stats">Statistiques</button>
+      <button data-tab="params">Paramètres</button>
+    </div>
+    <div><button class="btn sec" id="btnBack">Voir l’écran élèves</button> <button class="btn sec" id="btnLogout">Verrouiller</button></div>
   </div>
-
   <section id="tab-plats">
     <div class="panel">
       <h3>Ajouter un plat</h3>
@@ -134,11 +151,10 @@ main{padding:0 clamp(16px,4vw,48px) 48px}
     </div>
     <div class="panel">
       <h3>Mes plats</h3>
-      <p class="q" style="color:var(--mut);margin-bottom:8px">Activez les plats servis aujourd’hui : seuls ceux-là apparaissent chez les élèves.</p>
+      <p style="color:#5b6e64;margin-bottom:8px">Activez les plats servis aujourd’hui : seuls ceux-là apparaissent chez les élèves.</p>
       <div id="platList"></div>
     </div>
   </section>
-
   <section id="tab-stats" hidden>
     <div class="panel">
       <h3>Statistiques par plat</h3>
@@ -151,7 +167,6 @@ main{padding:0 clamp(16px,4vw,48px) 48px}
       <div id="statList"></div>
     </div>
   </section>
-
   <section id="tab-params" hidden>
     <div class="panel" style="max-width:460px">
       <h3>Changer le mot de passe</h3>
@@ -162,16 +177,21 @@ main{padding:0 clamp(16px,4vw,48px) 48px}
     </div>
   </section>
 </div>
+<div class="hint" id="cfgHint" hidden>⚠️ Renseignez votre configuration Firebase dans le fichier HTML (variable firebaseConfig).</div>
 
-<div class="hint" id="cfgHint" hidden>⚠️ Renseignez votre configuration Firebase dans le fichier HTML (variable <code>firebaseConfig</code>).</div>
+<!-- Polyfill Promise pour les anciens Chrome Android -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.2.8/es6-promise.auto.min.js"></script>
+<!-- SDK Firebase 8 : API compatibilité, sans modules ES -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<!-- CryptoJS évite de dépendre de Web Crypto, absent de certains anciens Chrome Android -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<script>
+(function () {
+"use strict";
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, getDoc, collection, addDoc, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, where, getDocs, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* ====== 1) COLLEZ ICI VOTRE CONFIGURATION FIREBASE (Paramètres du projet > Vos applications) ====== */
-const firebaseConfig = {
+/* ===== Configuration Firebase : conserver les paramètres du projet ===== */
+var firebaseConfig = {
   apiKey: "AIzaSyDIlYZDHrfCRSin17CbpMpbuLPbUbxcUo4",
   authDomain: "inventaire-college.firebaseapp.com",
   projectId: "inventaire-college",
@@ -180,204 +200,363 @@ const firebaseConfig = {
   appId: "1:1001228854609:web:03618db819cc4802e05f70",
   measurementId: "G-416MJSF1D5"
 };
-/* ================================================================================================== */
+/* ======================================================================= */
 
-if (firebaseConfig.apiKey.startsWith("VOTRE")) document.getElementById("cfgHint").hidden = false;
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-let isAdmin = false;
-const sha = async t => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)))].map(b => b.toString(16).padStart(2, "0")).join("");
-const cfgRef = doc(db, "config", "admin");
-const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const today = () => new Date().toLocaleDateString("sv"); // AAAA-MM-JJ (heure locale)
-const NOTES = [
-  {n:1, e:"😖", t:"Très mauvais", c:"var(--r1)"},
-  {n:2, e:"🙁", t:"Mauvais",      c:"var(--r2)"},
-  {n:3, e:"😐", t:"Moyen",        c:"var(--r3)"},
-  {n:4, e:"🙂", t:"Bon",          c:"var(--r4)"},
-  {n:5, e:"😍", t:"Très bon",     c:"var(--r5)"}
-];
-let plats = [];
-
-/* ---------- Plats en temps réel ---------- */
-onSnapshot(collection(db, "plats"), snap => {
-  plats = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => (a.nom||"").localeCompare(b.nom||"", "fr"));
-  renderStudent(); renderAdminList();
-}, err => console.error("Lecture des plats impossible :", err));
-
-/* ---------- Écran élèves ---------- */
-function renderStudent() {
-  const actifs = plats.filter(p => p.actif);
-  $("empty").hidden = actifs.length > 0;
-  $("grid").innerHTML = actifs.map(p => `
-    <button class="plat" data-id="${p.id}" aria-label="Noter ${esc(p.nom)}">
-      ${p.photo ? `<img src="${p.photo}" alt="">` : `<div class="ph">🍽️</div>`}
-      <span class="tag">Noter</span>
-      <span class="nom">${esc(p.nom)}</span>
-    </button>`).join("");
+if (!window.firebase) {
+  document.getElementById("cfgHint").hidden = false;
+  document.getElementById("cfgHint").innerHTML = "Impossible de charger Firebase. Vérifiez la connexion Internet et la compatibilité du navigateur.";
+  return;
 }
-$("grid").addEventListener("click", e => {
-  const b = e.target.closest(".plat"); if (b) openRate(b.dataset.id);
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+var isAdmin = false;
+var plats = [];
+var $ = function (id) { return document.getElementById(id); };
+
+function addClass(el, name) {
+  if ((" " + el.className + " ").indexOf(" " + name + " ") === -1) el.className += (el.className ? " " : "") + name;
+}
+function removeClass(el, name) {
+  el.className = (" " + el.className + " ").replace(" " + name + " ", " ").replace(/^\s+|\s+$/g, "");
+}
+function hasClass(el, name) {
+  return (" " + el.className + " ").indexOf(" " + name + " ") !== -1;
+}
+function closest(el, selector) {
+  while (el && el.nodeType === 1) {
+    if (selector.charAt(0) === "." && hasClass(el, selector.substring(1))) return el;
+    if (selector.charAt(0) === "[" && el.hasAttribute(selector.substring(1, selector.length - 1).split("=")[0])) return el;
+    el = el.parentNode;
+  }
+  return null;
+}
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function today() {
+  var d = new Date(), y = d.getFullYear(), m = d.getMonth() + 1, day = d.getDate();
+  return y + "-" + (m < 10 ? "0" : "") + m + "-" + (day < 10 ? "0" : "") + day;
+}
+function sha(t) {
+  return CryptoJS.SHA256(t).toString(CryptoJS.enc.Hex);
+}
+var cfgRef = db.collection("config").doc("admin");
+var NOTES = [
+  {n:1,e:"😖",t:"Très mauvais",c:"#e5484d"},
+  {n:2,e:"🙁",t:"Mauvais",c:"#f08a3c"},
+  {n:3,e:"😐",t:"Moyen",c:"#f5c542"},
+  {n:4,e:"🙂",t:"Bon",c:"#8cc152"},
+  {n:5,e:"😍",t:"Très bon",c:"#2fa36b"}
+];
+
+/* Abonnement temps réel aux plats */
+db.collection("plats").onSnapshot(function (snap) {
+  plats = [];
+  snap.forEach(function (d) {
+    var p = d.data();
+    p.id = d.id;
+    plats.push(p);
+  });
+  plats.sort(function (a, b) {
+    return (a.nom || "").localeCompare(b.nom || "", "fr");
+  });
+  renderStudent();
+  renderAdminList();
+}, function (err) {
+  console.error("Lecture des plats impossible :", err);
+  $("empty").hidden = false;
+  $("empty").innerHTML = "Impossible de charger les plats. Vérifiez votre connexion.";
+});
+
+/* Écran élèves */
+function renderStudent() {
+  var actifs = plats.filter(function (p) { return p.actif; });
+  $("empty").hidden = actifs.length > 0;
+  var out = "";
+  actifs.forEach(function (p) {
+    out += '<button class="plat" data-id="' + esc(p.id) + '" aria-label="Noter ' + esc(p.nom) + '">';
+    if (p.photo) out += '<img src="' + esc(p.photo) + '" alt="">';
+    else out += '<div class="ph">🍽️</div>';
+    out += '<span class="tag">Noter</span><span class="nom">' + esc(p.nom) + '</span></button>';
+  });
+  $("grid").innerHTML = out;
+}
+$("grid").addEventListener("click", function (e) {
+  var b = closest(e.target, ".plat");
+  if (b) openRate(b.getAttribute("data-id"));
 });
 
 function openRate(id) {
-  const p = plats.find(x => x.id === id); if (!p) return;
-  $("rateSheet").innerHTML = `
-    ${p.photo ? `<img class="big" src="${p.photo}" alt="">` : ""}
-    <h2>${esc(p.nom)}</h2>
-    <p class="q">Comment était ce plat ?</p>
-    <div class="rates">${NOTES.map(x => `<button class="rate" data-n="${x.n}"><span>${x.e}</span>${x.t}</button>`).join("")}</div>
-    <button class="cancel" id="btnCancelRate">Retour</button>`;
-  $("rateModal").classList.add("on");
-  $("rateSheet").onclick = async e => {
-    if (e.target.id === "btnCancelRate") return closeRate();
-    const r = e.target.closest(".rate"); if (!r) return;
+  var p = null, i;
+  for (i = 0; i < plats.length; i++) if (plats[i].id === id) p = plats[i];
+  if (!p) return;
+  var out = "";
+  if (p.photo) out += '<img class="big" src="' + esc(p.photo) + '" alt="">';
+  out += '<h2>' + esc(p.nom) + '</h2><p class="q">Comment était ce plat ?</p><div class="rates">';
+  NOTES.forEach(function (x) {
+    out += '<button class="rate" data-n="' + x.n + '"><span>' + x.e + '</span>' + x.t + '</button>';
+  });
+  out += '</div><button class="cancel" id="btnCancelRate">Retour</button>';
+  $("rateSheet").innerHTML = out;
+  addClass($("rateModal"), "on");
+  $("rateSheet").onclick = function (e) {
+    var target = e.target;
+    if (target.id === "btnCancelRate") { closeRate(); return; }
+    var r = closest(target, ".rate");
+    if (!r) return;
     $("rateSheet").onclick = null;
-    $("rateSheet").innerHTML = `<div class="thanks"><div class="e">🎉</div><h2>Merci pour votre contribution !</h2></div>`;
-    try {
-      await addDoc(collection(db, "notes"), {
-        platId: p.id, platNom: p.nom, note: Number(r.dataset.n),
-        date: today(), ts: serverTimestamp()
-      });
-    } catch (err) { console.error("Enregistrement de la note impossible :", err); }
-    setTimeout(closeRate, 1000);
+    $("rateSheet").innerHTML = '<div class="thanks"><div class="e">🎉</div><h2>Merci pour votre contribution !</h2></div>';
+    db.collection("notes").add({
+      platId: p.id,
+      platNom: p.nom,
+      note: Number(r.getAttribute("data-n")),
+      date: today(),
+      ts: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function () {
+      window.setTimeout(closeRate, 1000);
+    }).catch(function (err) {
+      console.error("Enregistrement de la note impossible :", err);
+      $("rateSheet").innerHTML = '<div class="thanks"><h2>Enregistrement impossible</h2><p>Vérifiez la connexion puis réessayez.</p><button class="btn" id="btnRetryClose">Fermer</button></div>';
+      $("rateSheet").onclick = function () { closeRate(); };
+    });
   };
 }
-function closeRate() { $("rateModal").classList.remove("on"); }
-$("rateModal").addEventListener("click", e => { if (e.target.id === "rateModal") closeRate(); });
+function closeRate() { removeClass($("rateModal"), "on"); }
+$("rateModal").addEventListener("click", function (e) {
+  if (e.target.id === "rateModal") closeRate();
+});
 
-/* ---------- Accès admin par mot de passe (défaut : 1234, modifiable dans Paramètres) ---------- */
-$("btnAdmin").onclick = () => { if (isAdmin) showAdmin(true); else { $("loginErr").textContent = ""; $("loginModal").classList.add("on"); $("pwd").focus(); } };
-$("btnCloseLogin").onclick = () => $("loginModal").classList.remove("on");
-$("btnLogin").onclick = async () => {
-  $("loginErr").textContent = "";
-  try {
-    const snap = await getDoc(cfgRef);
-    const hash = snap.exists() ? snap.data().hash : await sha("1234");
-    if (await sha($("pwd").value) !== hash) { $("loginErr").textContent = "Mot de passe incorrect."; return; }
-    isAdmin = true; $("loginModal").classList.remove("on"); $("pwd").value = ""; showAdmin(true);
-  } catch (e) { $("loginErr").textContent = "Connexion impossible : " + e.message; }
+/* Connexion administrateur */
+$("btnAdmin").onclick = function () {
+  if (isAdmin) showAdmin(true);
+  else {
+    $("loginErr").textContent = "";
+    addClass($("loginModal"), "on");
+    $("pwd").focus();
+  }
 };
-$("pwd").addEventListener("keydown", e => { if (e.key === "Enter") $("btnLogin").click(); });
-$("btnLogout").onclick = () => { isAdmin = false; showAdmin(false); };
-$("btnBack").onclick = () => showAdmin(false);
-$("btnSavePwd").onclick = async () => {
-  const a = $("newPwd").value, b = $("newPwd2").value, m = $("pwdMsg");
+$("btnCloseLogin").onclick = function () { removeClass($("loginModal"), "on"); };
+$("btnLogin").onclick = function () {
+  $("loginErr").textContent = "";
+  cfgRef.get().then(function (snap) {
+    var hash = snap.exists ? snap.data().hash : sha("1234");
+    if (sha($("pwd").value) !== hash) {
+      $("loginErr").textContent = "Mot de passe incorrect.";
+      return;
+    }
+    isAdmin = true;
+    removeClass($("loginModal"), "on");
+    $("pwd").value = "";
+    showAdmin(true);
+  }).catch(function (e) {
+    $("loginErr").textContent = "Connexion impossible : " + e.message;
+  });
+};
+$("pwd").addEventListener("keydown", function (e) {
+  if ((e.keyCode || e.which) === 13) $("btnLogin").click();
+});
+$("btnLogout").onclick = function () { isAdmin = false; showAdmin(false); };
+$("btnBack").onclick = function () { showAdmin(false); };
+
+$("btnSavePwd").onclick = function () {
+  var a = $("newPwd").value, b = $("newPwd2").value, m = $("pwdMsg");
   m.style.color = "#b42318";
   if (a.length < 4) { m.textContent = "Le mot de passe doit contenir au moins 4 caractères."; return; }
   if (a !== b) { m.textContent = "Les deux mots de passe sont différents."; return; }
-  try { await setDoc(cfgRef, { hash: await sha(a) }); $("newPwd").value = $("newPwd2").value = ""; m.style.color = "var(--r5)"; m.textContent = "Mot de passe modifié."; }
-  catch (e) { m.textContent = "Modification impossible : " + e.message; }
+  cfgRef.set({hash:sha(a)}).then(function () {
+    $("newPwd").value = "";
+    $("newPwd2").value = "";
+    m.style.color = "#2fa36b";
+    m.textContent = "Mot de passe modifié.";
+  }).catch(function (e) {
+    m.textContent = "Modification impossible : " + e.message;
+  });
 };
+
 function showAdmin(on) {
   if (on && !isAdmin) return;
-  $("admin").classList.toggle("on", on);
+  if (on) addClass($("admin"), "on");
+  else removeClass($("admin"), "on");
   $("student").style.display = on ? "none" : "";
-  if (on) { renderAdminList(); if (!$("statDate").value) $("statDate").value = today(); loadStats(); }
+  if (on) {
+    renderAdminList();
+    if (!$("statDate").value) $("statDate").value = today();
+    loadStats();
+  }
 }
 
-/* ---------- Onglets ---------- */
-document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
-  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
-  $("tab-plats").hidden = b.dataset.tab !== "plats";
-  $("tab-stats").hidden = b.dataset.tab !== "stats";
-  $("tab-params").hidden = b.dataset.tab !== "params";
-  if (b.dataset.tab === "stats") loadStats();
-});
+/* Onglets */
+var tabButtons = document.querySelectorAll(".tabs button");
+for (var ti = 0; ti < tabButtons.length; ti++) {
+  tabButtons[ti].onclick = function () {
+    var buttons = document.querySelectorAll(".tabs button");
+    for (var j = 0; j < buttons.length; j++) removeClass(buttons[j], "on");
+    addClass(this, "on");
+    $("tab-plats").hidden = this.getAttribute("data-tab") !== "plats";
+    $("tab-stats").hidden = this.getAttribute("data-tab") !== "stats";
+    $("tab-params").hidden = this.getAttribute("data-tab") !== "params";
+    if (this.getAttribute("data-tab") === "stats") loadStats();
+  };
+}
 
-/* ---------- Photos : redimensionnement puis stockage en base64 dans Firestore ---------- */
-function fileToDataUrl(file, max = 640) {
-  return new Promise((res, rej) => {
-    const img = new Image(), url = URL.createObjectURL(file);
-    img.onload = () => {
-      const k = Math.min(1, max / Math.max(img.width, img.height));
-      const c = document.createElement("canvas"); c.width = img.width * k; c.height = img.height * k;
+/* Photos : redimensionnement avant stockage dans Firestore */
+function fileToDataUrl(file, max) {
+  max = max || 640;
+  return new Promise(function (resolve, reject) {
+    var img = new Image();
+    var url = window.URL.createObjectURL(file);
+    img.onload = function () {
+      var k = Math.min(1, max / Math.max(img.width, img.height));
+      var c = document.createElement("canvas");
+      c.width = Math.round(img.width * k);
+      c.height = Math.round(img.height * k);
       c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-      URL.revokeObjectURL(url); res(c.toDataURL("image/jpeg", 0.72));
+      window.URL.revokeObjectURL(url);
+      resolve(c.toDataURL("image/jpeg", 0.72));
     };
-    img.onerror = () => rej(new Error("Image illisible")); img.src = url;
+    img.onerror = function () {
+      window.URL.revokeObjectURL(url);
+      reject(new Error("Image illisible"));
+    };
+    img.src = url;
   });
 }
 
-/* ---------- Gestion des plats ---------- */
-$("btnAdd").onclick = async () => {
-  const nom = $("newNom").value.trim(), f = $("newPhoto").files[0];
+/* Ajout d'un plat */
+$("btnAdd").onclick = function () {
+  var nom = $("newNom").value.replace(/^\s+|\s+$/g, "");
+  var f = $("newPhoto").files && $("newPhoto").files[0];
   $("addErr").textContent = "";
   if (!nom) { $("addErr").textContent = "Indiquez le nom du plat."; return; }
-  try {
-    await addDoc(collection(db, "plats"), { nom, photo: f ? await fileToDataUrl(f) : "", actif: true, createdAt: serverTimestamp() });
-    $("newNom").value = ""; $("newPhoto").value = "";
-  } catch (e) { $("addErr").textContent = "Ajout impossible : " + e.message; }
-};
-
-function renderAdminList() {
-  if (!$("admin").classList.contains("on")) return;
-  $("platList").innerHTML = plats.length ? plats.map(p => `
-    <div class="row">
-      ${p.photo ? `<img class="thumb" src="${p.photo}" alt="">` : `<div class="thumb">🍽️</div>`}
-      <strong>${esc(p.nom)}</strong>
-      <div class="acts">
-        <button class="sw ${p.actif ? "on" : ""}" data-act="toggle" data-id="${p.id}"><i></i>${p.actif ? "Au menu" : "Masqué"}</button>
-        <label class="btn sec" style="cursor:pointer">Photo<input type="file" accept="image/*" hidden data-act="photo" data-id="${p.id}"></label>
-        <button class="btn sec" data-act="rename" data-id="${p.id}">Renommer</button>
-        <button class="btn danger" data-act="del" data-id="${p.id}">Supprimer</button>
-      </div>
-    </div>`).join("") : `<p class="empty">Aucun plat pour l’instant. Ajoutez-en un ci-dessus.</p>`;
-}
-$("platList").addEventListener("click", async e => {
-  const b = e.target.closest("[data-act]"); if (!b || b.type === "file") return;
-  const p = plats.find(x => x.id === b.dataset.id); if (!p) return;
-  if (b.dataset.act === "toggle") await updateDoc(doc(db, "plats", p.id), { actif: !p.actif });
-  if (b.dataset.act === "rename") { const n = prompt("Nouveau nom du plat :", p.nom); if (n && n.trim()) await updateDoc(doc(db, "plats", p.id), { nom: n.trim() }); }
-  if (b.dataset.act === "del" && confirm(`Supprimer « ${p.nom} » ? Les notes déjà enregistrées sont conservées.`)) await deleteDoc(doc(db, "plats", p.id));
-});
-$("platList").addEventListener("change", async e => {
-  if (e.target.dataset.act !== "photo" || !e.target.files[0]) return;
-  await updateDoc(doc(db, "plats", e.target.dataset.id), { photo: await fileToDataUrl(e.target.files[0]) });
-});
-
-/* ---------- Statistiques ---------- */
-$("statDate").onchange = loadStats;
-$("btnAll").onclick = () => { $("statDate").value = ""; loadStats(); };
-$("btnClear").onclick = async () => {
-  const d = $("statDate").value;
-  const msg = d ? `Effacer définitivement toutes les notes du ${d.split("-").reverse().join("/")} ?` : "Effacer définitivement TOUTES les notes de toutes les dates ?";
-  if (!confirm(msg)) return;
-  try {
-    const snap = await getDocs(d ? query(collection(db, "notes"), where("date", "==", d)) : collection(db, "notes"));
-    await Promise.all(snap.docs.map(x => deleteDoc(x.ref)));
-  } catch (e) { alert("Suppression impossible : " + e.message); }
-  loadStats();
-};
-async function loadStats() {
-  const d = $("statDate").value;
-  $("btnClear").textContent = d ? `Effacer les stats du ${d.split("-").reverse().join("/")}` : "Effacer toutes les stats";
-  $("statList").innerHTML = `<p class="empty">Chargement…</p>`;
-  try {
-    const q = d ? query(collection(db, "notes"), where("date", "==", d)) : collection(db, "notes");
-    const snap = await getDocs(q);
-    const by = {};
-    snap.forEach(s => {
-      const x = s.data(); const o = by[x.platId] ||= { nom: x.platNom, c: [0,0,0,0,0], n: 0, sum: 0 };
-      o.c[x.note - 1]++; o.n++; o.sum += x.note;
+  var photoPromise = f ? fileToDataUrl(f) : Promise.resolve("");
+  photoPromise.then(function (photo) {
+    return db.collection("plats").add({
+      nom:nom, photo:photo, actif:true,
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
-    const ids = Object.keys(by).sort((a,b) => by[b].sum/by[b].n - by[a].sum/by[a].n);
-    if (!ids.length) { $("statList").innerHTML = `<p class="empty">Aucune note ${d ? "à cette date" : "pour l’instant"}.</p>`; return; }
-    $("statList").innerHTML = ids.map(id => {
-      const o = by[id], p = plats.find(x => x.id === id), m = o.sum / o.n;
-      return `<div class="stat">
-        <div class="top">
-          ${p && p.photo ? `<img class="thumb" src="${p.photo}" alt="">` : `<div class="thumb">🍽️</div>`}
-          <strong>${esc(p ? p.nom : o.nom)}</strong>
-          <div class="avg">${m.toFixed(1).replace(".", ",")} / 5<small>${o.n} vote${o.n > 1 ? "s" : ""}</small></div>
-        </div>
-        <div class="dist">${o.c.map((v,i) => v ? `<div style="width:${v/o.n*100}%;background:${NOTES[i].c}"></div>` : "").join("")}</div>
-        <div class="legend">${NOTES.map((x,i) => `<span><i class="dot" style="background:${x.c}"></i>${x.t} : <b>${o.c[i]}</b></span>`).join("")}</div>
-      </div>`;
-    }).join("");
-  } catch (e) { $("statList").innerHTML = `<p class="err">Lecture impossible : ${esc(e.message)}</p>`; }
+  }).then(function () {
+    $("newNom").value = "";
+    $("newPhoto").value = "";
+  }).catch(function (e) {
+    $("addErr").textContent = "Ajout impossible : " + e.message;
+  });
+};
+
+/* Liste des plats dans l'administration */
+function renderAdminList() {
+  if (!hasClass($("admin"), "on")) return;
+  var out = "";
+  if (!plats.length) out = '<p class="empty">Aucun plat pour l’instant. Ajoutez-en un ci-dessus.</p>';
+  plats.forEach(function (p) {
+    out += '<div class="row">';
+    if (p.photo) out += '<img class="thumb" src="' + esc(p.photo) + '" alt="">';
+    else out += '<div class="thumb">🍽️</div>';
+    out += '<strong>' + esc(p.nom) + '</strong><div class="acts">';
+    out += '<button class="sw ' + (p.actif ? "on" : "") + '" data-act="toggle" data-id="' + esc(p.id) + '"><i></i>' + (p.actif ? "Au menu" : "Masqué") + '</button>';
+    out += '<label class="btn sec">Photo<input type="file" accept="image/*" style="display:none" data-act="photo" data-id="' + esc(p.id) + '"></label>';
+    out += '<button class="btn sec" data-act="rename" data-id="' + esc(p.id) + '">Renommer</button>';
+    out += '<button class="btn danger" data-act="del" data-id="' + esc(p.id) + '">Supprimer</button>';
+    out += '</div></div>';
+  });
+  $("platList").innerHTML = out;
 }
+$("platList").addEventListener("click", function (e) {
+  var b = closest(e.target, "[data-act]");
+  if (!b || b.getAttribute("data-act") === "photo") return;
+  var id = b.getAttribute("data-id"), p = null;
+  for (var i = 0; i < plats.length; i++) if (plats[i].id === id) p = plats[i];
+  if (!p) return;
+  if (b.getAttribute("data-act") === "toggle") {
+    db.collection("plats").doc(p.id).update({actif:!p.actif}).catch(showAdminError);
+  }
+  if (b.getAttribute("data-act") === "rename") {
+    var n = window.prompt("Nouveau nom du plat :", p.nom);
+    if (n && n.replace(/^\s+|\s+$/g, "")) {
+      db.collection("plats").doc(p.id).update({nom:n.replace(/^\s+|\s+$/g, "")}).catch(showAdminError);
+    }
+  }
+  if (b.getAttribute("data-act") === "del" && window.confirm("Supprimer « " + p.nom + " » ? Les notes déjà enregistrées sont conservées.")) {
+    db.collection("plats").doc(p.id).delete().catch(showAdminError);
+  }
+});
+function showAdminError(e) { window.alert("Opération impossible : " + e.message); }
+$("platList").addEventListener("change", function (e) {
+  var input = e.target;
+  if (input.getAttribute("data-act") !== "photo" || !input.files || !input.files[0]) return;
+  var id = input.getAttribute("data-id");
+  fileToDataUrl(input.files[0]).then(function (photo) {
+    return db.collection("plats").doc(id).update({photo:photo});
+  }).catch(function (err) { showAdminError(err); });
+});
+
+/* Statistiques */
+$("statDate").onchange = loadStats;
+$("btnAll").onclick = function () { $("statDate").value = ""; loadStats(); };
+$("btnClear").onclick = function () {
+  var d = $("statDate").value;
+  var msg = d ? "Effacer définitivement toutes les notes du " + d.split("-").reverse().join("/") + " ?" : "Effacer définitivement TOUTES les notes de toutes les dates ?";
+  if (!window.confirm(msg)) return;
+  var q = d ? db.collection("notes").where("date", "==", d) : db.collection("notes");
+  q.get().then(function (snap) {
+    var batch = db.batch();
+    snap.forEach(function (doc) { batch.delete(doc.ref); });
+    return batch.commit();
+  }).then(loadStats).catch(function (e) {
+    window.alert("Suppression impossible : " + e.message);
+    loadStats();
+  });
+};
+
+function loadStats() {
+  var d = $("statDate").value;
+  $("btnClear").textContent = d ? "Effacer les stats du " + d.split("-").reverse().join("/") : "Effacer toutes les stats";
+  $("statList").innerHTML = '<p class="empty">Chargement…</p>';
+  var q = d ? db.collection("notes").where("date", "==", d) : db.collection("notes");
+  q.get().then(function (snap) {
+    var by = {};
+    snap.forEach(function (s) {
+      var x = s.data();
+      var key = x.platId;
+      if (!by[key]) by[key] = {nom:x.platNom,c:[0,0,0,0,0],n:0,sum:0};
+      by[key].c[x.note - 1]++;
+      by[key].n++;
+      by[key].sum += x.note;
+    });
+    var ids = Object.keys(by);
+    ids.sort(function (a, b) {
+      return by[b].sum / by[b].n - by[a].sum / by[a].n;
+    });
+    if (!ids.length) {
+      $("statList").innerHTML = '<p class="empty">Aucune note ' + (d ? "à cette date" : "pour l’instant") + '.</p>';
+      return;
+    }
+    var out = "";
+    ids.forEach(function (id) {
+      var o = by[id], p = null, m = o.sum / o.n;
+      for (var i = 0; i < plats.length; i++) if (plats[i].id === id) p = plats[i];
+      out += '<div class="stat"><div class="top">';
+      if (p && p.photo) out += '<img class="thumb" src="' + esc(p.photo) + '" alt="">';
+      else out += '<div class="thumb">🍽️</div>';
+      out += '<div class="avg">' + m.toFixed(1).replace(".", ",") + ' / 5<small>' + o.n + ' vote' + (o.n > 1 ? "s" : "") + '</small></div>';
+      out += '<strong style="display:block;padding-top:18px;overflow:hidden">' + esc(p ? p.nom : o.nom) + '</strong></div>';
+      out += '<div class="dist">';
+      o.c.forEach(function (v, i) {
+        if (v) out += '<div style="width:' + (v / o.n * 100) + '%;background:' + NOTES[i].c + '"></div>';
+      });
+      out += '</div><div class="legend">';
+      NOTES.forEach(function (x, i) {
+        out += '<span><i class="dot" style="background:' + x.c + '"></i>' + x.t + ' : <b>' + o.c[i] + '</b></span> &nbsp; ';
+      });
+      out += '</div></div>';
+    });
+    $("statList").innerHTML = out;
+  }).catch(function (e) {
+    $("statList").innerHTML = '<p class="err">Lecture impossible : ' + esc(e.message) + '</p>';
+  });
+}
+}());
 </script>
 </body>
 </html>
