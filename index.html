@@ -1,905 +1,383 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Palmarès — Gala de la Promo 50</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cantine – Notez votre repas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:       #0C0A08;
-  --surface:  #141210;
-  --surface2: #1E1B18;
-  --surface3: #252119;
-  --border:   rgba(212,180,100,0.12);
-  --border2:  rgba(212,180,100,0.25);
-  --text:     #F5EDD8;
-  --text2:    #A89870;
-  --text3:    #5C5240;
-  --gold:     #D4B464;
-  --gold2:    #F0D080;
-  --gold-bg:  rgba(212,180,100,0.10);
-  --gold-lt:  rgba(212,180,100,0.05);
-  --red:      #C0524A;
-  --red-bg:   rgba(192,82,74,0.12);
-  --green:    #5A9E72;
-  --green-bg: rgba(90,158,114,0.12);
-  --r:        8px;
-  --r-lg:     14px;
-}
-html { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
-body { min-height: 100vh; }
-body::before {
-  content: '';
-  position: fixed; inset: 0; pointer-events: none; z-index: 999;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.35;
-}
-.page { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
-.site-header { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border2); position: relative; }
-.site-header::after { content: '✦'; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); background: var(--bg); padding: 0 12px; color: var(--gold); font-size: 14px; }
-.site-kicker { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
-.site-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 48px); font-weight: 700; color: var(--gold2); line-height: 1.1; margin-bottom: 6px; }
-.site-sub { font-size: 13px; color: var(--text2); font-style: italic; }
-.sync-row { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 14px; font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
-.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); }
-.sync-dot.live { background: var(--green); box-shadow: 0 0 5px var(--green); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-.screen { display: none; }
-.screen.active { display: block; animation: fadeIn .3s ease; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-.center-wrap { display: flex; align-items: center; justify-content: center; min-height: 50vh; }
-.auth-box { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--r-lg); padding: 2.5rem 2rem; width: 100%; max-width: 400px; text-align: center; }
-.auth-box .ornament { font-size: 28px; margin-bottom: 1rem; }
-.auth-box h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold2); margin-bottom: 6px; }
-.auth-box p { font-size: 12px; color: var(--text2); margin-bottom: 1.5rem; }
-.divider { display: flex; align-items: center; gap: 10px; margin: 1.4rem 0; color: var(--text3); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
-.divider::before, .divider::after { content:''; flex:1; height:1px; background: var(--border2); }
-.pin-row { display: flex; gap: 8px; }
-.err-msg { font-size: 11px; color: var(--red); margin-top: 6px; min-height: 14px; }
-.field { margin-bottom: 12px; text-align: left; }
-.field label { display: block; font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
-input[type=text], input[type=password], textarea, select {
-  width: 100%; background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r);
-  padding: 8px 11px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
-  transition: border-color .15s, box-shadow .15s;
-}
-input:focus, textarea:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,180,100,0.12); }
-textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235C5240' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; cursor: pointer; }
-select option { background: #1E1B18; }
-.btn { display: inline-flex; align-items: center; gap: 5px; border-radius: var(--r); padding: 0 16px; height: 36px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif; border: 1px solid var(--border2); background: var(--surface2); color: var(--text); transition: background .15s, border-color .15s; white-space: nowrap; }
-.btn:hover { background: var(--surface3); }
-.btn-gold { background: var(--gold); border-color: var(--gold); color: #0C0A08; font-weight: 600; }
-.btn-gold:hover { background: var(--gold2); border-color: var(--gold2); }
-.btn-red { background: var(--red-bg); border-color: rgba(192,82,74,0.3); color: var(--red); }
-.btn-red:hover { background: rgba(192,82,74,0.2); }
-.btn-full { width: 100%; justify-content: center; }
-.btn-lg { height: 44px; font-size: 14px; border-radius: var(--r-lg); }
-.btn-sm { height: 28px; padding: 0 10px; font-size: 11px; }
-.tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; }
-.tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 9px 16px; cursor: pointer; font-size: 11px; font-weight: 500; color: var(--text3); font-family: 'DM Sans', sans-serif; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: -1px; transition: color .15s, border-color .15s; }
-.tab:hover { color: var(--text); }
-.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
-.admin-tab { display: none; }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.25rem; margin-bottom: 1rem; }
-.card-title { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
-.table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 1rem; }
-.table-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-.table-head-title { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: left; padding: 8px 14px; font-size: 10px; font-weight: 500; color: var(--text3); border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.06em; background: var(--bg); }
-td { padding: 7px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--gold-lt); }
-.empty { text-align: center; padding: 2.5rem; color: var(--text3); font-size: 12px; font-style: italic; }
-.del-btn { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 12px; padding: 3px 6px; border-radius: 4px; transition: color .12s, background .12s; }
-.del-btn:hover { color: var(--red); background: var(--red-bg); }
-.badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 99px; background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
-.status-msg { font-size: 11px; font-weight: 500; min-height: 14px; }
-.ok { color: var(--green); }
-.er { color: var(--red); }
-.flex-gap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.flex-between { display: flex; align-items: center; justify-content: space-between; }
-code { font-family: 'DM Mono', monospace; font-size: 11px; background: var(--surface2); padding: 1px 5px; border-radius: 3px; color: var(--text2); }
-
-/* ── Vote ── */
-.vote-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-.vote-student-name { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--gold2); }
-.progress-bar-wrap { margin-bottom: 2rem; }
-.progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; margin-bottom: 5px; }
-.progress-bar { height: 3px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 99px; transition: width .5s cubic-bezier(.4,0,.2,1); }
-.cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 1.2rem; transition: border-color .2s; }
-.cat-card.voted { border-color: rgba(212,180,100,0.35); }
-.cat-header { padding: 1.1rem 1.25rem 0.8rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.cat-emoji { font-size: 22px; margin-right: 10px; flex-shrink: 0; }
-.cat-name { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--text); line-height: 1.2; }
-.cat-desc { font-size: 12px; color: var(--text2); margin-top: 2px; }
-.cat-voted-badge { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 99px; background: var(--gold-bg); color: var(--gold); border: 1px solid var(--border2); white-space: nowrap; flex-shrink: 0; }
-.cat-body { padding: 1rem 1.25rem; }
-.candidates-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-.candidate-item { display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r); padding: 8px 12px; cursor: pointer; transition: background .15s, border-color .15s; gap: 10px; }
-.candidate-item:hover { background: var(--surface3); border-color: var(--border2); }
-.candidate-item.selected { background: var(--gold-bg); border-color: var(--border2); }
-.candidate-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-.candidate-radio { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--text3); flex-shrink: 0; transition: border-color .15s, background .15s; display: flex; align-items: center; justify-content: center; }
-.candidate-item.selected .candidate-radio { border-color: var(--gold); background: var(--gold); }
-.candidate-item.selected .candidate-radio::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #0C0A08; }
-.candidate-name { font-size: 13px; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.candidate-votes { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); white-space: nowrap; }
-.propose-row { display: flex; gap: 8px; margin-top: 4px; }
-.propose-input { flex: 1; height: 34px; font-size: 12px; }
-.propose-hint { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
-.recap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
-.recap-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1rem; }
-.recap-cat { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
-.recap-vote { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--gold2); }
-.recap-vote.empty-vote { color: var(--text3); font-style: italic; font-family: 'DM Sans', sans-serif; font-size: 12px; }
-
-/* ── Résultats admin ── */
-.results-grid { display: grid; gap: 1rem; }
-.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
-.result-card-header { padding: 1rem 1.25rem 0.8rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-.result-card-name { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--text); }
-.result-card-count { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); margin-left: auto; }
-.result-row { display: flex; align-items: center; gap: 10px; padding: 8px 1.25rem; border-bottom: 1px solid var(--border); }
-.result-row:last-child { border-bottom: none; }
-.result-rank { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text3); min-width: 24px; text-align: center; }
-.result-rank.gold { color: var(--gold); font-weight: 700; }
-.result-name { flex: 1; font-size: 14px; color: var(--text); font-weight: 500; }
-.result-bar-wrap { flex: 2; display: flex; align-items: center; gap: 8px; }
-.result-bar { height: 6px; background: var(--surface2); border-radius: 99px; flex: 1; overflow: hidden; }
-.result-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 99px; transition: width .5s ease; }
-.result-count { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text2); min-width: 60px; text-align: right; font-weight: 500; }
-
-/* ── Détail des votes ── */
-.detail-section { margin-bottom: 1.5rem; }
-.detail-section-header { display: flex; align-items: center; gap: 10px; padding: 0.9rem 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg) var(--r-lg) 0 0; border-bottom: none; }
-.detail-section-emoji { font-size: 18px; }
-.detail-section-name { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--text); }
-.detail-section-count { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text3); margin-left: auto; }
-.detail-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 var(--r-lg) var(--r-lg); overflow: hidden; }
-.detail-table-wrap table { font-size: 12px; }
-.detail-table-wrap th { font-size: 10px; }
-.detail-table-wrap td { padding: 6px 14px; }
-
-@media (max-width: 600px) {
-  .page { padding: 1.5rem 1rem 4rem; }
-  .site-title { font-size: 26px; }
-}
+:root{--bg:#f2f7f4;--ink:#14281f;--mut:#5b6e64;--card:#fff;--sun:#ffc93c;--forest:#14532d;--line:#d9e5de;
+--r1:#e5484d;--r2:#f08a3c;--r3:#f5c542;--r4:#8cc152;--r5:#2fa36b}
+*{box-sizing:border-box;margin:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.1}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+:focus-visible{outline:3px solid var(--forest);outline-offset:3px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px clamp(16px,4vw,48px)}
+header h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800}
+.adminlink{background:none;color:var(--mut);font-size:.85rem;padding:8px 12px;border-radius:99px}
+.adminlink:hover{background:#e3eee8}
+main{padding:0 clamp(16px,4vw,48px) 48px}
+.lead{color:var(--mut);font-size:1.1rem;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.plat{position:relative;aspect-ratio:4/5;border-radius:28px;overflow:hidden;background:var(--forest);text-align:left;box-shadow:0 6px 20px rgba(20,40,31,.15);transition:transform .15s}
+.plat:hover{transform:translateY(-4px)}
+.plat img{width:100%;height:100%;object-fit:cover;display:block}
+.plat .ph{width:100%;height:100%;display:grid;place-items:center;font-size:5rem;background:linear-gradient(135deg,#1c6b3c,#14532d)}
+.plat .nom{position:absolute;inset:auto 0 0 0;padding:60px 20px 20px;background:linear-gradient(transparent,rgba(10,25,16,.85));color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:1.5rem}
+.plat .tag{position:absolute;top:14px;right:14px;background:var(--sun);color:var(--ink);font-weight:700;font-size:.85rem;padding:6px 12px;border-radius:99px}
+.empty{text-align:center;padding:60px 20px;color:var(--mut);font-size:1.1rem}
+.overlay{position:fixed;inset:0;background:rgba(10,25,16,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:10;overflow:auto}
+.overlay.on{display:flex}
+.sheet{background:var(--card);border-radius:32px;padding:28px;width:min(640px,100%);animation:pop .2s ease-out}
+@keyframes pop{from{transform:scale(.95);opacity:0}}
+.sheet .big{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:20px;margin-bottom:18px;background:var(--forest)}
+.sheet h2{font-size:1.8rem;margin-bottom:4px}
+.sheet p.q{color:var(--mut);margin-bottom:18px}
+.rates{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.rate{background:var(--bg);border-radius:20px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.8rem;font-weight:700;border:3px solid transparent;transition:.12s}
+.rate span{font-size:2.2rem}
+.rate:hover{transform:scale(1.06)}
+.rate[data-n="1"]:hover{border-color:var(--r1)}.rate[data-n="2"]:hover{border-color:var(--r2)}
+.rate[data-n="3"]:hover{border-color:var(--r3)}.rate[data-n="4"]:hover{border-color:var(--r4)}.rate[data-n="5"]:hover{border-color:var(--r5)}
+.cancel{margin-top:16px;background:none;color:var(--mut);padding:8px}
+.thanks{text-align:center;padding:48px 28px}
+.thanks .e{font-size:4.5rem}
+.thanks h2{font-size:2.2rem;margin-top:8px}
+.field{display:block;width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--line);font:inherit;margin-bottom:10px;background:#fff}
+.btn{background:var(--forest);color:#fff;padding:12px 20px;border-radius:14px;font-weight:700}
+.btn.sec{background:#e3eee8;color:var(--ink)}
+.btn.danger{background:#fde8e8;color:#b42318}
+.err{color:#b42318;font-size:.9rem;min-height:1.2em;margin-bottom:8px}
+/* admin */
+#admin{display:none;max-width:1000px;margin:0 auto;padding:24px clamp(16px,4vw,32px) 60px}
+#admin.on{display:block}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.tabs{display:flex;gap:6px;background:#e3eee8;padding:5px;border-radius:99px}
+.tabs button{background:none;padding:9px 18px;border-radius:99px;font-weight:700}
+.tabs button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.panel{background:var(--card);border-radius:24px;padding:22px;margin-bottom:18px}
+.panel h3{font-size:1.3rem;margin-bottom:14px}
+.add{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:start}
+.add .field{margin:0}
+.row{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.thumb{width:64px;height:64px;border-radius:14px;object-fit:cover;background:var(--forest);display:grid;place-items:center;font-size:1.6rem}
+.acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.acts .btn{padding:8px 12px;font-size:.85rem}
+.sw{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;background:none}
+.sw i{width:44px;height:26px;border-radius:99px;background:#c9d6cf;position:relative;transition:.15s}
+.sw i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.15s}
+.sw.on i{background:var(--r5)}.sw.on i::after{left:21px}
+.stat{padding:16px 0;border-top:1px solid var(--line)}
+.stat:first-of-type{border-top:0}
+.stat .top{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;margin-bottom:10px}
+.avg{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.8rem;text-align:right}
+.avg small{display:block;font-family:'DM Sans';font-weight:400;font-size:.8rem;color:var(--mut)}
+.dist{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--line)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--mut);margin-top:8px}
+.legend b{color:var(--ink)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.filters .field{width:auto;margin:0}
+.hint{background:#fff6d6;border-radius:14px;padding:14px;font-size:.9rem;margin:20px}
+@media(max-width:560px){.rate{font-size:.65rem}.rate span{font-size:1.7rem}.add{grid-template-columns:1fr}.row{grid-template-columns:48px 1fr}.row .acts{grid-column:1/-1;justify-content:flex-start}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDjAt_9gox702UaXf7-EYGojv-nbfYwYuY",
-  authDomain: "amphi-blanc---voeux-finaux.firebaseapp.com",
-  databaseURL: "https://amphi-blanc---voeux-finaux-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "amphi-blanc---voeux-finaux",
-  storageBucket: "amphi-blanc---voeux-finaux.firebasestorage.app",
-  messagingSenderId: "91659498687",
-  appId: "1:91659498687:web:33b4a83265eaaef4e5c20a",
-  measurementId: "G-S6P9DLTJ2N"
-};
-const FB = 'gala';
-const FIREBASE_OK = !FIREBASE_CONFIG.apiKey.startsWith('VOTRE');
-</script>
+<!-- ============ ÉCRAN ÉLÈVES ============ -->
+<div id="student">
+  <header>
+    <h1>Qu’avez-vous pensé du repas ?</h1>
+    <button class="adminlink" id="btnAdmin">Espace admin</button>
+  </header>
+  <main>
+    <p class="lead">Touchez un plat pour lui donner une note.</p>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>Aucun plat à noter pour le moment. Revenez à la prochaine pause déjeuner !</div>
+  </main>
+</div>
 
-<div class="page">
-  <div class="site-header">
-    <div class="site-kicker">Promotion 50 · IRA de Bastia</div>
-    <div class="site-title">Palmarès du Gala</div>
-    <div class="site-sub">Votez pour vos camarades — les résultats restent secrets jusqu'au soir</div>
-    <div class="sync-row">
-      <span class="sync-dot" id="sync-dot"></span>
-      <span id="sync-label">—</span>
-    </div>
-  </div>
+<!-- Fenêtre de notation -->
+<div class="overlay" id="rateModal"><div class="sheet" id="rateSheet"></div></div>
 
-  <!-- ══ LOCK ══ -->
-  <div id="screen-lock" class="screen active">
-    <div class="center-wrap">
-      <div class="auth-box">
-        <div class="ornament">🏆</div>
-        <h2>Accès à la plateforme</h2>
-        <p>Entrez votre code PIN pour voter, ou le code admin pour gérer la plateforme.</p>
-        <div class="field">
-          <label>Je suis…</label>
-          <select id="pin-select" onchange="onPinSelectChange()">
-            <option value="">— Choisir mon nom —</option>
-          </select>
-        </div>
-        <div id="pin-field-wrap" style="display:none;">
-          <div class="field">
-            <label>Code PIN</label>
-            <input type="password" id="pin-input" placeholder="••••" maxlength="4" inputmode="numeric"
-              style="text-align:center;letter-spacing:6px;font-family:'DM Mono',monospace;"
-              onkeydown="if(event.key==='Enter')tryPin()" />
-          </div>
-          <button class="btn btn-gold btn-full btn-lg" onclick="tryPin()">Voter</button>
-          <div class="err-msg" id="pin-err"></div>
-        </div>
-        <div class="divider">Administration</div>
-        <div class="pin-row">
-          <input type="password" id="admin-input" placeholder="Code admin" onkeydown="if(event.key==='Enter')tryAdmin()" />
-          <button class="btn btn-gold" onclick="tryAdmin()">Entrer</button>
-        </div>
-        <div class="err-msg" id="admin-err"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ VOTE ══ -->
-  <div id="screen-vote" class="screen">
-    <div style="margin-bottom:1.5rem;">
-      <div class="vote-header-top">
-        <div>
-          <div class="vote-student-name" id="vote-student-name">—</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:2px;" id="vote-student-sub">—</div>
-        </div>
-        <button class="btn btn-sm" onclick="logout()">Se déconnecter</button>
-      </div>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-labels">
-        <span id="prog-label">0 / 0 catégories votées</span>
-        <span id="prog-pct">0%</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-    </div>
-    <div id="categories-list"></div>
-    <div style="text-align:center;margin-top:1.5rem;">
-      <button class="btn btn-gold btn-lg" onclick="showRecap()" id="voir-recap-btn" style="display:none;">Voir mon récapitulatif →</button>
-    </div>
-  </div>
-
-  <!-- ══ RÉCAP ÉLÈVE ══ -->
-  <div id="screen-recap" class="screen">
-    <div class="flex-between" style="margin-bottom:1.5rem;">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--gold2);">Mes votes</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:2px;">Récapitulatif · modifiable jusqu'à la clôture</div>
-      </div>
-      <button class="btn btn-sm" onclick="showScreen('screen-vote');renderVoteScreen();">← Modifier</button>
-    </div>
-    <div class="recap-grid" id="recap-grid"></div>
-    <div style="text-align:center;margin-top:1rem;">
-      <button class="btn btn-gold btn-lg" onclick="logout()">Terminer et me déconnecter</button>
-    </div>
-  </div>
-
-  <!-- ══ ADMIN ══ -->
-  <div id="screen-admin" class="screen">
-    <div class="flex-between" style="margin-bottom:1.5rem;">
-      <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--gold2);">Administration</div>
-      <button class="btn btn-sm" onclick="showScreen('screen-lock')">Verrouiller</button>
-    </div>
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('tab-eleves',this)">Élèves</button>
-      <button class="tab" onclick="switchTab('tab-cats',this)">Catégories</button>
-      <button class="tab" onclick="switchTab('tab-results',this)">Résultats</button>
-      <button class="tab" onclick="switchTab('tab-detail',this)">Détail des votes</button>
-      <button class="tab" onclick="switchTab('tab-settings',this)">Paramètres</button>
-    </div>
-
-    <!-- Élèves -->
-    <div id="tab-eleves" class="admin-tab" style="display:block;">
-      <div class="card">
-        <div class="card-title">Importer les élèves</div>
-        <p style="font-size:12px;color:var(--text2);margin-bottom:10px;">Un élève par ligne : <code>Prénom Nom;PIN</code> — ex : <code>Marie Dupont;1234</code><br>Si pas de PIN : <code>Marie Dupont</code> (accès libre)</p>
-        <div class="field"><textarea id="eleves-bulk" placeholder="Marie Dupont;1234&#10;Jean Martin;5678&#10;Sophie Bernard;0000"></textarea></div>
-        <div class="flex-gap">
-          <button class="btn btn-gold" onclick="importEleves()">Importer</button>
-          <button class="btn btn-red btn-sm" onclick="clearEleves()">Tout effacer</button>
-        </div>
-        <div class="status-msg" id="eleves-status"></div>
-      </div>
-      <div class="table-wrap">
-        <div class="table-head">
-          <span class="table-head-title">Élèves enregistrés</span>
-          <span class="badge" id="eleves-count">0</span>
-        </div>
-        <div id="eleves-table"><div class="empty">Aucun élève.</div></div>
-      </div>
-    </div>
-
-    <!-- Catégories -->
-    <div id="tab-cats" class="admin-tab">
-      <div class="card">
-        <div class="card-title">Ajouter une catégorie</div>
-        <div style="display:grid;grid-template-columns:60px 1fr;gap:10px;margin-bottom:10px;">
-          <div class="field"><label>Emoji</label><input type="text" id="cat-emoji" placeholder="😄" maxlength="4" style="text-align:center;font-size:20px;" /></div>
-          <div class="field"><label>Nom de la catégorie</label><input type="text" id="cat-name" placeholder="Le plus beau sourire" onkeydown="if(event.key==='Enter')addCat()" /></div>
-        </div>
-        <div class="field"><label>Description (optionnelle)</label><input type="text" id="cat-desc" placeholder="Celui qui illumine toute la salle…" onkeydown="if(event.key==='Enter')addCat()" /></div>
-        <button class="btn btn-gold" onclick="addCat()">Ajouter</button>
-        <div class="status-msg" id="cats-status"></div>
-      </div>
-      <div class="table-wrap">
-        <div class="table-head">
-          <span class="table-head-title">Catégories</span>
-          <span class="badge" id="cats-count">0</span>
-        </div>
-        <div id="cats-table"><div class="empty">Aucune catégorie.</div></div>
-      </div>
-    </div>
-
-    <!-- ══ RÉSULTATS ══ -->
-    <div id="tab-results" class="admin-tab">
-      <div class="flex-between" style="margin-bottom:1rem;">
-        <p style="font-size:12px;color:var(--text2);">Total des votes par candidat, par catégorie.</p>
-        <button class="btn btn-sm" onclick="exportCSV()">Exporter CSV</button>
-      </div>
-      <div id="results-container"><div class="empty">Aucun vote enregistré.</div></div>
-    </div>
-
-    <!-- ══ DÉTAIL DES VOTES ══ -->
-    <div id="tab-detail" class="admin-tab">
-      <div class="flex-between" style="margin-bottom:1rem;">
-        <p style="font-size:12px;color:var(--text2);">Pour chaque catégorie : qui a voté pour qui. Ces informations restent confidentielles.</p>
-        <div class="flex-gap">
-          <button class="btn btn-red btn-sm" onclick="resetVotes()">Réinitialiser les votes</button>
-        </div>
-      </div>
-      <div id="detail-container"><div class="empty">Aucun vote enregistré.</div></div>
-    </div>
-
-    <!-- Paramètres -->
-    <div id="tab-settings" class="admin-tab">
-      <div class="card">
-        <div class="card-title">Code administrateur</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-          <div class="field"><label>Nouveau code</label><input type="password" id="new-pin" placeholder="Nouveau code" /></div>
-          <div class="field"><label>Confirmer</label><input type="password" id="confirm-pin" placeholder="Confirmer" /></div>
-        </div>
-        <button class="btn btn-gold" onclick="changePin()">Enregistrer</button>
-        <div class="status-msg" id="pin-change-status"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Clôture des votes</div>
-        <div class="flex-gap" style="margin-bottom:8px;">
-          <label style="font-size:13px;color:var(--text);margin:0;text-transform:none;letter-spacing:0;" for="votes-open-toggle">Votes ouverts</label>
-          <input type="checkbox" id="votes-open-toggle" style="width:auto;height:18px;accent-color:var(--gold);cursor:pointer;" onchange="toggleVotesOpen()" />
-        </div>
-        <p style="font-size:11px;color:var(--text3);">Décochez pour clôturer les votes. Les élèves ne pourront plus modifier leurs choix.</p>
-      </div>
-    </div>
+<!-- Connexion admin -->
+<div class="overlay" id="loginModal">
+  <div class="sheet" style="max-width:420px">
+    <h2>Espace administrateur</h2><p class="q">Entrez le mot de passe pour gérer les plats.</p>
+    <input class="field" id="pwd" type="password" placeholder="Mot de passe" autocomplete="current-password">
+    <div class="err" id="loginErr"></div>
+    <div style="display:flex;gap:10px"><button class="btn" id="btnLogin">Entrer</button><button class="btn sec" id="btnCloseLogin">Annuler</button></div>
   </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<!-- ============ ESPACE ADMIN ============ -->
+<div id="admin">
+  <div class="bar">
+    <h1>Espace admin</h1>
+    <div class="tabs"><button class="on" data-tab="plats">Plats du jour</button><button data-tab="stats">Statistiques</button><button data-tab="params">Paramètres</button></div>
+    <div style="display:flex;gap:8px"><button class="btn sec" id="btnBack">Voir l’écran élèves</button><button class="btn sec" id="btnLogout">Verrouiller</button></div>
+  </div>
 
-<script>
-// ══════════════════════════════════════
-//  ÉTAT
-// ══════════════════════════════════════
-let eleves     = [];
-let categories = [];
-let votes      = {};
-let votesOpen  = true;
-let db         = null;
-let currentUser = null;
+  <section id="tab-plats">
+    <div class="panel">
+      <h3>Ajouter un plat</h3>
+      <div class="add">
+        <input class="field" id="newNom" placeholder="Nom du plat (ex. Poulet rôti, riz)">
+        <input class="field" id="newPhoto" type="file" accept="image/*">
+        <button class="btn" id="btnAdd">Ajouter</button>
+      </div>
+      <div class="err" id="addErr"></div>
+    </div>
+    <div class="panel">
+      <h3>Mes plats</h3>
+      <p class="q" style="color:var(--mut);margin-bottom:8px">Activez les plats servis aujourd’hui : seuls ceux-là apparaissent chez les élèves.</p>
+      <div id="platList"></div>
+    </div>
+  </section>
 
-// ══════════════════════════════════════
-//  FIREBASE
-// ══════════════════════════════════════
-function initFirebase() {
-  if (!FIREBASE_OK) { loadLocal(); return; }
-  try {
-    firebase.initializeApp(FIREBASE_CONFIG);
-    db = firebase.database();
-    setSync('Connexion…', false);
-    setupListeners();
-  } catch(e) { setSync('Erreur', false); }
-}
-function setSync(t, live) {
-  document.getElementById('sync-label').textContent = t;
-  document.getElementById('sync-dot').className = 'sync-dot' + (live ? ' live' : '');
-}
-function setupListeners() {
-  [
-    ['eleves',     v => { eleves     = v ? Object.values(v) : []; }],
-    ['categories', v => { categories = v ? Object.values(v).sort((a,b)=>(a.order||0)-(b.order||0)) : []; }],
-    ['votes',      v => { votes      = v || {}; }],
-    ['settings',   v => {
-      votesOpen = v?.votesOpen !== false;
-      const t = document.getElementById('votes-open-toggle');
-      if (t) t.checked = votesOpen;
-    }],
-  ].forEach(([path, handler]) => {
-    db.ref(FB+'/'+path).on('value', snap => {
-      handler(snap.val());
-      refresh();
-      setSync('Sync · '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}), true);
-    });
-  });
-}
+  <section id="tab-stats" hidden>
+    <div class="panel">
+      <h3>Statistiques par plat</h3>
+      <div class="filters">
+        <label for="statDate">Date</label>
+        <input class="field" type="date" id="statDate">
+        <button class="btn sec" id="btnAll">Toutes les dates</button>
+        <button class="btn danger" id="btnClear"></button>
+      </div>
+      <div id="statList"></div>
+    </div>
+  </section>
 
-const LS = {
-  get: k => { try { return JSON.parse(localStorage.getItem('gala_'+k)); } catch(e){return null;} },
-  set: (k,v) => localStorage.setItem('gala_'+k, JSON.stringify(v))
+  <section id="tab-params" hidden>
+    <div class="panel" style="max-width:460px">
+      <h3>Changer le mot de passe</h3>
+      <input class="field" id="newPwd" type="password" placeholder="Nouveau mot de passe" autocomplete="new-password">
+      <input class="field" id="newPwd2" type="password" placeholder="Confirmer le mot de passe" autocomplete="new-password">
+      <div class="err" id="pwdMsg"></div>
+      <button class="btn" id="btnSavePwd">Enregistrer</button>
+    </div>
+  </section>
+</div>
+
+<div class="hint" id="cfgHint" hidden>⚠️ Renseignez votre configuration Firebase dans le fichier HTML (variable <code>firebaseConfig</code>).</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, getDoc, collection, addDoc, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, where, getDocs, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ====== 1) COLLEZ ICI VOTRE CONFIGURATION FIREBASE (Paramètres du projet > Vos applications) ====== */
+const firebaseConfig = {
+  apiKey: "AIzaSyDIlYZDHrfCRSin17CbpMpbuLPbUbxcUo4",
+  authDomain: "inventaire-college.firebaseapp.com",
+  projectId: "inventaire-college",
+  storageBucket: "inventaire-college.firebasestorage.app",
+  messagingSenderId: "1001228854609",
+  appId: "1:1001228854609:web:03618db819cc4802e05f70",
+  measurementId: "G-416MJSF1D5"
 };
-function loadLocal() {
-  eleves     = LS.get('eleves')     || [];
-  categories = (LS.get('categories')||[]).sort((a,b)=>(a.order||0)-(b.order||0));
-  votes      = LS.get('votes')      || {};
-  votesOpen  = LS.get('votesOpen') !== false;
-  const t = document.getElementById('votes-open-toggle');
-  if (t) t.checked = votesOpen;
-  refresh();
-  setSync('Local', false);
+/* ================================================================================================== */
+
+if (firebaseConfig.apiKey.startsWith("VOTRE")) document.getElementById("cfgHint").hidden = false;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+let isAdmin = false;
+const sha = async t => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)))].map(b => b.toString(16).padStart(2, "0")).join("");
+const cfgRef = doc(db, "config", "admin");
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today = () => new Date().toLocaleDateString("sv"); // AAAA-MM-JJ (heure locale)
+const NOTES = [
+  {n:1, e:"😖", t:"Très mauvais", c:"var(--r1)"},
+  {n:2, e:"🙁", t:"Mauvais",      c:"var(--r2)"},
+  {n:3, e:"😐", t:"Moyen",        c:"var(--r3)"},
+  {n:4, e:"🙂", t:"Bon",          c:"var(--r4)"},
+  {n:5, e:"😍", t:"Très bon",     c:"var(--r5)"}
+];
+let plats = [];
+
+/* ---------- Plats en temps réel ---------- */
+onSnapshot(collection(db, "plats"), snap => {
+  plats = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => (a.nom||"").localeCompare(b.nom||"", "fr"));
+  renderStudent(); renderAdminList();
+}, err => console.error("Lecture des plats impossible :", err));
+
+/* ---------- Écran élèves ---------- */
+function renderStudent() {
+  const actifs = plats.filter(p => p.actif);
+  $("empty").hidden = actifs.length > 0;
+  $("grid").innerHTML = actifs.map(p => `
+    <button class="plat" data-id="${p.id}" aria-label="Noter ${esc(p.nom)}">
+      ${p.photo ? `<img src="${p.photo}" alt="">` : `<div class="ph">🍽️</div>`}
+      <span class="tag">Noter</span>
+      <span class="nom">${esc(p.nom)}</span>
+    </button>`).join("");
+}
+$("grid").addEventListener("click", e => {
+  const b = e.target.closest(".plat"); if (b) openRate(b.dataset.id);
+});
+
+function openRate(id) {
+  const p = plats.find(x => x.id === id); if (!p) return;
+  $("rateSheet").innerHTML = `
+    ${p.photo ? `<img class="big" src="${p.photo}" alt="">` : ""}
+    <h2>${esc(p.nom)}</h2>
+    <p class="q">Comment était ce plat ?</p>
+    <div class="rates">${NOTES.map(x => `<button class="rate" data-n="${x.n}"><span>${x.e}</span>${x.t}</button>`).join("")}</div>
+    <button class="cancel" id="btnCancelRate">Retour</button>`;
+  $("rateModal").classList.add("on");
+  $("rateSheet").onclick = async e => {
+    if (e.target.id === "btnCancelRate") return closeRate();
+    const r = e.target.closest(".rate"); if (!r) return;
+    $("rateSheet").onclick = null;
+    $("rateSheet").innerHTML = `<div class="thanks"><div class="e">🎉</div><h2>Merci pour votre contribution !</h2></div>`;
+    try {
+      await addDoc(collection(db, "notes"), {
+        platId: p.id, platNom: p.nom, note: Number(r.dataset.n),
+        date: today(), ts: serverTimestamp()
+      });
+    } catch (err) { console.error("Enregistrement de la note impossible :", err); }
+    setTimeout(closeRate, 1000);
+  };
+}
+function closeRate() { $("rateModal").classList.remove("on"); }
+$("rateModal").addEventListener("click", e => { if (e.target.id === "rateModal") closeRate(); });
+
+/* ---------- Accès admin par mot de passe (défaut : 1234, modifiable dans Paramètres) ---------- */
+$("btnAdmin").onclick = () => { if (isAdmin) showAdmin(true); else { $("loginErr").textContent = ""; $("loginModal").classList.add("on"); $("pwd").focus(); } };
+$("btnCloseLogin").onclick = () => $("loginModal").classList.remove("on");
+$("btnLogin").onclick = async () => {
+  $("loginErr").textContent = "";
+  try {
+    const snap = await getDoc(cfgRef);
+    const hash = snap.exists() ? snap.data().hash : await sha("1234");
+    if (await sha($("pwd").value) !== hash) { $("loginErr").textContent = "Mot de passe incorrect."; return; }
+    isAdmin = true; $("loginModal").classList.remove("on"); $("pwd").value = ""; showAdmin(true);
+  } catch (e) { $("loginErr").textContent = "Connexion impossible : " + e.message; }
+};
+$("pwd").addEventListener("keydown", e => { if (e.key === "Enter") $("btnLogin").click(); });
+$("btnLogout").onclick = () => { isAdmin = false; showAdmin(false); };
+$("btnBack").onclick = () => showAdmin(false);
+$("btnSavePwd").onclick = async () => {
+  const a = $("newPwd").value, b = $("newPwd2").value, m = $("pwdMsg");
+  m.style.color = "#b42318";
+  if (a.length < 4) { m.textContent = "Le mot de passe doit contenir au moins 4 caractères."; return; }
+  if (a !== b) { m.textContent = "Les deux mots de passe sont différents."; return; }
+  try { await setDoc(cfgRef, { hash: await sha(a) }); $("newPwd").value = $("newPwd2").value = ""; m.style.color = "var(--r5)"; m.textContent = "Mot de passe modifié."; }
+  catch (e) { m.textContent = "Modification impossible : " + e.message; }
+};
+function showAdmin(on) {
+  if (on && !isAdmin) return;
+  $("admin").classList.toggle("on", on);
+  $("student").style.display = on ? "none" : "";
+  if (on) { renderAdminList(); if (!$("statDate").value) $("statDate").value = today(); loadStats(); }
 }
 
-// ══════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if (id === 'screen-lock') populatePinSelect();
-}
-function switchTab(tabId, btn) {
-  document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(tabId).style.display = 'block';
-  btn.classList.add('active');
-  if (tabId === 'tab-results') renderResults();
-  if (tabId === 'tab-detail')  renderDetail();
-}
+/* ---------- Onglets ---------- */
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  $("tab-plats").hidden = b.dataset.tab !== "plats";
+  $("tab-stats").hidden = b.dataset.tab !== "stats";
+  $("tab-params").hidden = b.dataset.tab !== "params";
+  if (b.dataset.tab === "stats") loadStats();
+});
 
-// ══════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════
-function populatePinSelect() {
-  const sel = document.getElementById('pin-select');
-  sel.innerHTML = '<option value="">— Choisir mon nom —</option>';
-  eleves.forEach(e => {
-    const o = document.createElement('option');
-    o.value = e.id; o.textContent = e.nom;
-    sel.appendChild(o);
+/* ---------- Photos : redimensionnement puis stockage en base64 dans Firestore ---------- */
+function fileToDataUrl(file, max = 640) {
+  return new Promise((res, rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas"); c.width = img.width * k; c.height = img.height * k;
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url); res(c.toDataURL("image/jpeg", 0.72));
+    };
+    img.onerror = () => rej(new Error("Image illisible")); img.src = url;
   });
-  document.getElementById('pin-input').value = '';
-  document.getElementById('pin-err').textContent = '';
-  document.getElementById('pin-field-wrap').style.display = 'none';
-}
-function onPinSelectChange() {
-  const id = document.getElementById('pin-select').value;
-  document.getElementById('pin-field-wrap').style.display = id ? '' : 'none';
-  document.getElementById('pin-input').value = '';
-  document.getElementById('pin-err').textContent = '';
-}
-function tryPin() {
-  const id = document.getElementById('pin-select').value;
-  const entered = document.getElementById('pin-input').value;
-  if (!id) return;
-  const eleve = eleves.find(e => e.id === id);
-  if (!eleve) return;
-  if (!eleve.pin || entered === eleve.pin) {
-    currentUser = eleve.nom;
-    showScreen('screen-vote');
-    renderVoteScreen();
-  } else {
-    document.getElementById('pin-err').textContent = 'Code PIN incorrect.';
-  }
-}
-async function tryAdmin() {
-  const pin = document.getElementById('admin-input').value;
-  let stored = 'admin2024';
-  if (db) { try { const s = await db.ref(FB+'/settings/pin').get(); if (s.val()) stored = s.val(); } catch(e){} }
-  else stored = LS.get('pin') || 'admin2024';
-  if (pin === stored) {
-    document.getElementById('admin-input').value = '';
-    document.getElementById('admin-err').textContent = '';
-    showScreen('screen-admin');
-    refresh();
-  } else {
-    document.getElementById('admin-err').textContent = 'Code incorrect.';
-  }
-}
-function logout() {
-  currentUser = null;
-  showScreen('screen-lock');
 }
 
-// ══════════════════════════════════════
-//  LOGIQUE VOTES
-// ══════════════════════════════════════
-function myVotes() {
-  const out = {};
-  categories.forEach(cat => {
-    const catVotes = votes[cat.id] || {};
-    for (const [candidat, votants] of Object.entries(catVotes)) {
-      if (Array.isArray(votants) && votants.includes(currentUser)) {
-        out[cat.id] = candidat;
-        break;
-      }
-    }
-  });
-  return out;
+/* ---------- Gestion des plats ---------- */
+$("btnAdd").onclick = async () => {
+  const nom = $("newNom").value.trim(), f = $("newPhoto").files[0];
+  $("addErr").textContent = "";
+  if (!nom) { $("addErr").textContent = "Indiquez le nom du plat."; return; }
+  try {
+    await addDoc(collection(db, "plats"), { nom, photo: f ? await fileToDataUrl(f) : "", actif: true, createdAt: serverTimestamp() });
+    $("newNom").value = ""; $("newPhoto").value = "";
+  } catch (e) { $("addErr").textContent = "Ajout impossible : " + e.message; }
+};
+
+function renderAdminList() {
+  if (!$("admin").classList.contains("on")) return;
+  $("platList").innerHTML = plats.length ? plats.map(p => `
+    <div class="row">
+      ${p.photo ? `<img class="thumb" src="${p.photo}" alt="">` : `<div class="thumb">🍽️</div>`}
+      <strong>${esc(p.nom)}</strong>
+      <div class="acts">
+        <button class="sw ${p.actif ? "on" : ""}" data-act="toggle" data-id="${p.id}"><i></i>${p.actif ? "Au menu" : "Masqué"}</button>
+        <label class="btn sec" style="cursor:pointer">Photo<input type="file" accept="image/*" hidden data-act="photo" data-id="${p.id}"></label>
+        <button class="btn sec" data-act="rename" data-id="${p.id}">Renommer</button>
+        <button class="btn danger" data-act="del" data-id="${p.id}">Supprimer</button>
+      </div>
+    </div>`).join("") : `<p class="empty">Aucun plat pour l’instant. Ajoutez-en un ci-dessus.</p>`;
 }
+$("platList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]"); if (!b || b.type === "file") return;
+  const p = plats.find(x => x.id === b.dataset.id); if (!p) return;
+  if (b.dataset.act === "toggle") await updateDoc(doc(db, "plats", p.id), { actif: !p.actif });
+  if (b.dataset.act === "rename") { const n = prompt("Nouveau nom du plat :", p.nom); if (n && n.trim()) await updateDoc(doc(db, "plats", p.id), { nom: n.trim() }); }
+  if (b.dataset.act === "del" && confirm(`Supprimer « ${p.nom} » ? Les notes déjà enregistrées sont conservées.`)) await deleteDoc(doc(db, "plats", p.id));
+});
+$("platList").addEventListener("change", async e => {
+  if (e.target.dataset.act !== "photo" || !e.target.files[0]) return;
+  await updateDoc(doc(db, "plats", e.target.dataset.id), { photo: await fileToDataUrl(e.target.files[0]) });
+});
 
-function getCandidats(catId) {
-  const catVotes = votes[catId] || {};
-  return Object.entries(catVotes)
-    .map(([nom, votants]) => ({ nom, count: Array.isArray(votants) ? votants.length : 0 }))
-    .sort((a,b) => b.count - a.count);
-}
-
-async function vote(catId, candidatNom) {
-  if (!currentUser || !votesOpen) return;
-  const catVotes = { ...(votes[catId] || {}) };
-  // Retirer le vote précédent de cet utilisateur
-  for (const nom of Object.keys(catVotes)) {
-    const arr = catVotes[nom] || [];
-    catVotes[nom] = arr.filter(v => v !== currentUser);
-    if (catVotes[nom].length === 0) delete catVotes[nom];
-  }
-  // Ajouter le nouveau vote
-  if (candidatNom) {
-    catVotes[candidatNom] = [...(catVotes[candidatNom] || []), currentUser];
-  }
-  if (db) {
-    await db.ref(`${FB}/votes/${catId}`).set(Object.keys(catVotes).length ? catVotes : null);
-  } else {
-    votes[catId] = catVotes;
-    LS.set('votes', votes);
-    refresh();
-  }
-}
-
-async function proposeCandidat(catId, nom) {
-  const trimmed = nom.trim();
-  if (!trimmed || !currentUser) return;
-  await vote(catId, trimmed);
-}
-
-// ══════════════════════════════════════
-//  RENDER VOTE ÉLÈVE
-// ══════════════════════════════════════
-function renderVoteScreen() {
-  const nameEl = document.getElementById('vote-student-name');
-  const subEl  = document.getElementById('vote-student-sub');
-  if (nameEl) nameEl.textContent = currentUser || '—';
-  if (subEl)  subEl.textContent  = votesOpen ? 'Les votes sont ouverts' : '⚠ Les votes sont clôturés';
-
-  const my    = myVotes();
-  const voted = Object.keys(my).length;
-  const total = categories.length;
-  const pct   = total > 0 ? Math.round((voted/total)*100) : 0;
-
-  const progLabel = document.getElementById('prog-label');
-  const progPct   = document.getElementById('prog-pct');
-  const progFill  = document.getElementById('prog-fill');
-  if (progLabel) progLabel.textContent = `${voted} / ${total} catégories votées`;
-  if (progPct)   progPct.textContent   = pct + '%';
-  if (progFill)  progFill.style.width  = pct + '%';
-
-  const recapBtn = document.getElementById('voir-recap-btn');
-  if (recapBtn) recapBtn.style.display = voted > 0 ? '' : 'none';
-
-  const list = document.getElementById('categories-list');
-  if (!list) return;
-  if (!categories.length) {
-    list.innerHTML = '<div class="empty">Aucune catégorie configurée pour l\'instant.</div>';
-    return;
-  }
-  list.innerHTML = categories.map(cat => renderCatCard(cat, my[cat.id] || null)).join('');
-}
-
-function renderCatCard(cat, myChoice) {
-  const candidats = getCandidats(cat.id);
-  const hasVoted  = !!myChoice;
-  const isOpen    = votesOpen;
-
-  const candidatsHtml = candidats.length === 0
-    ? `<div style="font-size:12px;color:var(--text3);font-style:italic;padding:8px 0;">Aucun candidat proposé — soyez le premier !</div>`
-    : candidats.map(c => {
-        const selected = c.nom === myChoice;
-        return `<div class="candidate-item${selected?' selected':''}" onclick="${isOpen?`selectCandidat('${esc(cat.id)}','${esc(c.nom)}')`:''}">
-          <div class="candidate-left">
-            <div class="candidate-radio"></div>
-            <span class="candidate-name">${esc(c.nom)}</span>
-          </div>
-          <span class="candidate-votes">${c.count} vote${c.count>1?'s':''}</span>
-        </div>`;
-      }).join('');
-
-  const proposeHtml = isOpen ? `
-    <div class="propose-hint">Vous ne trouvez pas le bon nom ? Proposez-en un :</div>
-    <div class="propose-row">
-      <input type="text" class="propose-input" id="propose-${esc(cat.id)}" placeholder="Prénom Nom…" onkeydown="if(event.key==='Enter')proposeAndVote('${esc(cat.id)}')" />
-      <button class="btn btn-gold btn-sm" onclick="proposeAndVote('${esc(cat.id)}')">Proposer & voter</button>
-    </div>` : '';
-
-  return `<div class="cat-card${hasVoted?' voted':''}" id="cat-${esc(cat.id)}">
-    <div class="cat-header">
-      <div style="display:flex;align-items:flex-start;">
-        <span class="cat-emoji">${esc(cat.emoji||'🏅')}</span>
-        <div>
-          <div class="cat-name">${esc(cat.nom)}</div>
-          ${cat.desc ? `<div class="cat-desc">${esc(cat.desc)}</div>` : ''}
+/* ---------- Statistiques ---------- */
+$("statDate").onchange = loadStats;
+$("btnAll").onclick = () => { $("statDate").value = ""; loadStats(); };
+$("btnClear").onclick = async () => {
+  const d = $("statDate").value;
+  const msg = d ? `Effacer définitivement toutes les notes du ${d.split("-").reverse().join("/")} ?` : "Effacer définitivement TOUTES les notes de toutes les dates ?";
+  if (!confirm(msg)) return;
+  try {
+    const snap = await getDocs(d ? query(collection(db, "notes"), where("date", "==", d)) : collection(db, "notes"));
+    await Promise.all(snap.docs.map(x => deleteDoc(x.ref)));
+  } catch (e) { alert("Suppression impossible : " + e.message); }
+  loadStats();
+};
+async function loadStats() {
+  const d = $("statDate").value;
+  $("btnClear").textContent = d ? `Effacer les stats du ${d.split("-").reverse().join("/")}` : "Effacer toutes les stats";
+  $("statList").innerHTML = `<p class="empty">Chargement…</p>`;
+  try {
+    const q = d ? query(collection(db, "notes"), where("date", "==", d)) : collection(db, "notes");
+    const snap = await getDocs(q);
+    const by = {};
+    snap.forEach(s => {
+      const x = s.data(); const o = by[x.platId] ||= { nom: x.platNom, c: [0,0,0,0,0], n: 0, sum: 0 };
+      o.c[x.note - 1]++; o.n++; o.sum += x.note;
+    });
+    const ids = Object.keys(by).sort((a,b) => by[b].sum/by[b].n - by[a].sum/by[a].n);
+    if (!ids.length) { $("statList").innerHTML = `<p class="empty">Aucune note ${d ? "à cette date" : "pour l’instant"}.</p>`; return; }
+    $("statList").innerHTML = ids.map(id => {
+      const o = by[id], p = plats.find(x => x.id === id), m = o.sum / o.n;
+      return `<div class="stat">
+        <div class="top">
+          ${p && p.photo ? `<img class="thumb" src="${p.photo}" alt="">` : `<div class="thumb">🍽️</div>`}
+          <strong>${esc(p ? p.nom : o.nom)}</strong>
+          <div class="avg">${m.toFixed(1).replace(".", ",")} / 5<small>${o.n} vote${o.n > 1 ? "s" : ""}</small></div>
         </div>
-      </div>
-      ${hasVoted ? `<span class="cat-voted-badge">✓ Voté</span>` : ''}
-    </div>
-    <div class="cat-body">
-      <div class="candidates-list">${candidatsHtml}</div>
-      ${proposeHtml}
-    </div>
-  </div>`;
-}
-
-function selectCandidat(catId, candidatNom) {
-  vote(catId, candidatNom).then(() => { if (!db) renderVoteScreen(); });
-}
-function proposeAndVote(catId) {
-  const input = document.getElementById('propose-'+catId);
-  if (!input || !input.value.trim()) return;
-  const nom = input.value;
-  input.value = '';
-  proposeCandidat(catId, nom).then(() => { if (!db) renderVoteScreen(); });
-}
-function showRecap() {
-  const my    = myVotes();
-  const grid  = document.getElementById('recap-grid');
-  if (grid) {
-    grid.innerHTML = categories.map(cat => {
-      const choix = my[cat.id];
-      return `<div class="recap-item">
-        <div class="recap-cat">${esc(cat.emoji||'🏅')} ${esc(cat.nom)}</div>
-        ${choix
-          ? `<div class="recap-vote">${esc(choix)}</div>`
-          : `<div class="recap-vote empty-vote">Pas encore voté</div>`}
+        <div class="dist">${o.c.map((v,i) => v ? `<div style="width:${v/o.n*100}%;background:${NOTES[i].c}"></div>` : "").join("")}</div>
+        <div class="legend">${NOTES.map((x,i) => `<span><i class="dot" style="background:${x.c}"></i>${x.t} : <b>${o.c[i]}</b></span>`).join("")}</div>
       </div>`;
-    }).join('');
-  }
-  showScreen('screen-recap');
+    }).join("");
+  } catch (e) { $("statList").innerHTML = `<p class="err">Lecture impossible : ${esc(e.message)}</p>`; }
 }
-
-// ══════════════════════════════════════
-//  RENDER ADMIN — RÉSULTATS
-//  Affiche uniquement les totaux de votes
-//  (qui a le plus de voix dans chaque catégorie)
-// ══════════════════════════════════════
-function renderResults() {
-  const el = document.getElementById('results-container');
-  if (!el) return;
-  if (!categories.length) { el.innerHTML = '<div class="empty">Aucune catégorie.</div>'; return; }
-
-  const allEmpty = categories.every(cat => getCandidats(cat.id).length === 0);
-  if (allEmpty) { el.innerHTML = '<div class="empty">Aucun vote enregistré.</div>'; return; }
-
-  el.innerHTML = '<div class="results-grid">' + categories.map(cat => {
-    const candidats  = getCandidats(cat.id);
-    const totalVotes = candidats.reduce((s,c) => s+c.count, 0);
-    const maxCount   = candidats[0]?.count || 1;
-
-    if (!candidats.length) return `<div class="result-card">
-      <div class="result-card-header">
-        <span style="font-size:18px;">${esc(cat.emoji||'🏅')}</span>
-        <span class="result-card-name">${esc(cat.nom)}</span>
-        <span class="result-card-count">0 vote</span>
-      </div>
-      <div class="empty" style="padding:1rem;">Aucun vote pour l'instant.</div>
-    </div>`;
-
-    const rows = candidats.map((c, i) => {
-      const pct       = Math.round((c.count / maxCount) * 100);
-      const rankClass = i === 0 ? ' gold' : '';
-      const rankLabel = i === 0 ? '★' : (i + 1);
-      return `<div class="result-row">
-        <span class="result-rank${rankClass}">${rankLabel}</span>
-        <span class="result-name">${esc(c.nom)}</span>
-        <div class="result-bar-wrap">
-          <div class="result-bar"><div class="result-bar-fill" style="width:${pct}%"></div></div>
-        </div>
-        <span class="result-count">${c.count} voix</span>
-      </div>`;
-    }).join('');
-
-    return `<div class="result-card">
-      <div class="result-card-header">
-        <span style="font-size:18px;">${esc(cat.emoji||'🏅')}</span>
-        <span class="result-card-name">${esc(cat.nom)}</span>
-        <span class="result-card-count">${totalVotes} vote${totalVotes>1?'s':''}</span>
-      </div>
-      ${rows}
-    </div>`;
-  }).join('') + '</div>';
-}
-
-// ══════════════════════════════════════
-//  RENDER ADMIN — DÉTAIL DES VOTES
-//  Affiche, pour chaque catégorie,
-//  le tableau votant → candidat choisi
-// ══════════════════════════════════════
-function renderDetail() {
-  const el = document.getElementById('detail-container');
-  if (!el) return;
-  if (!categories.length) { el.innerHTML = '<div class="empty">Aucune catégorie.</div>'; return; }
-
-  // Construire, pour chaque catégorie, la liste votant → choix
-  const html = categories.map(cat => {
-    const catVotes = votes[cat.id] || {};
-
-    // Inverser la structure : { candidat: [votants] } → { votant: candidat }
-    const parVotant = {}; // { nomVotant: nomCandidat }
-    for (const [candidat, votants] of Object.entries(catVotes)) {
-      if (!Array.isArray(votants)) continue;
-      votants.forEach(votant => { parVotant[votant] = candidat; });
-    }
-
-    const lignes = Object.entries(parVotant).sort((a,b) => a[0].localeCompare(b[0]));
-    const nbVotes = lignes.length;
-
-    const tableContent = lignes.length === 0
-      ? `<div class="empty" style="padding:1rem;">Aucun vote pour l'instant.</div>`
-      : `<div class="detail-table-wrap"><table>
-          <thead><tr><th>Élève</th><th>A voté pour</th></tr></thead>
-          <tbody>
-            ${lignes.map(([votant, candidat]) => `<tr>
-              <td style="color:var(--text2);">${esc(votant)}</td>
-              <td style="font-weight:500;color:var(--gold2);">${esc(candidat)}</td>
-            </tr>`).join('')}
-          </tbody>
-        </table></div>`;
-
-    return `<div class="detail-section">
-      <div class="detail-section-header">
-        <span class="detail-section-emoji">${esc(cat.emoji||'🏅')}</span>
-        <span class="detail-section-name">${esc(cat.nom)}</span>
-        <span class="detail-section-count">${nbVotes} vote${nbVotes>1?'s':''}</span>
-      </div>
-      ${tableContent}
-    </div>`;
-  }).join('');
-
-  el.innerHTML = html || '<div class="empty">Aucun vote enregistré.</div>';
-}
-
-// ══════════════════════════════════════
-//  RENDER ADMIN — ÉLÈVES / CATÉGORIES
-// ══════════════════════════════════════
-function renderAdminEleves() {
-  document.getElementById('eleves-count').textContent = eleves.length;
-  const el = document.getElementById('eleves-table');
-  if (!el) return;
-  if (!eleves.length) { el.innerHTML = '<div class="empty">Aucun élève.</div>'; return; }
-  el.innerHTML = `<table><thead><tr><th>Nom</th><th>PIN</th><th></th></tr></thead><tbody>` +
-    eleves.map(e => `<tr>
-      <td>${esc(e.nom)}</td>
-      <td><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);">${e.pin ? '••••' : 'aucun'}</span></td>
-      <td><button class="del-btn" onclick="delEleve('${e.id}')">✕</button></td>
-    </tr>`).join('') + `</tbody></table>`;
-}
-
-function renderAdminCats() {
-  document.getElementById('cats-count').textContent = categories.length;
-  const el = document.getElementById('cats-table');
-  if (!el) return;
-  if (!categories.length) { el.innerHTML = '<div class="empty">Aucune catégorie.</div>'; return; }
-  el.innerHTML = `<table><thead><tr><th>Emoji</th><th>Catégorie</th><th>Description</th><th></th></tr></thead><tbody>` +
-    categories.map(c => `<tr>
-      <td style="font-size:18px;text-align:center;">${esc(c.emoji||'🏅')}</td>
-      <td style="font-weight:500;">${esc(c.nom)}</td>
-      <td style="font-size:12px;color:var(--text2);">${esc(c.desc||'')}</td>
-      <td><button class="del-btn" onclick="delCat('${c.id}')">✕</button></td>
-    </tr>`).join('') + `</tbody></table>`;
-}
-
-// ══════════════════════════════════════
-//  REFRESH GLOBAL
-// ══════════════════════════════════════
-function refresh() {
-  populatePinSelect();
-  renderAdminEleves();
-  renderAdminCats();
-  renderResults();
-  renderDetail();
-  if (currentUser) renderVoteScreen();
-}
-
-// ══════════════════════════════════════
-//  ACTIONS ADMIN
-// ══════════════════════════════════════
-async function importEleves() {
-  const lines = document.getElementById('eleves-bulk').value.trim().split('\n').filter(l=>l.trim());
-  const toImport = [];
-  lines.forEach(line => {
-    const parts = line.split(';');
-    const nom = parts[0].trim(); if (!nom) return;
-    const pin = parts[1]?.trim() || '';
-    const id  = 'e_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
-    toImport.push({id, nom, pin});
-  });
-  if (!toImport.length) { setStatus('eleves-status','Format invalide.','er'); return; }
-  if (db) {
-    const u = {}; toImport.forEach(e => { u[`${FB}/eleves/${e.id}`] = e; });
-    await db.ref().update(u);
-  } else {
-    eleves = [...eleves, ...toImport];
-    LS.set('eleves', eleves); refresh();
-  }
-  document.getElementById('eleves-bulk').value = '';
-  setStatus('eleves-status', `${toImport.length} élève(s) importé(s).`, 'ok');
-}
-
-async function clearEleves() {
-  if (!confirm('Effacer tous les élèves ?')) return;
-  if (db) await db.ref(`${FB}/eleves`).remove();
-  else { eleves=[]; LS.set('eleves',[]); refresh(); }
-}
-async function delEleve(id) {
-  if (db) await db.ref(`${FB}/eleves/${id}`).remove();
-  else { eleves=eleves.filter(e=>e.id!==id); LS.set('eleves',eleves); refresh(); }
-}
-
-async function addCat() {
-  const nom   = document.getElementById('cat-name').value.trim();
-  const emoji = document.getElementById('cat-emoji').value.trim() || '🏅';
-  const desc  = document.getElementById('cat-desc').value.trim();
-  if (!nom) { setStatus('cats-status','Entrez un nom.','er'); return; }
-  const maxOrder = categories.length ? Math.max(...categories.map(c=>c.order||0)) : 0;
-  const cat = { id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,6), nom, emoji, desc, order:maxOrder+1 };
-  if (db) await db.ref(`${FB}/categories/${cat.id}`).set(cat);
-  else { categories.push(cat); LS.set('categories',categories); refresh(); }
-  document.getElementById('cat-name').value  = '';
-  document.getElementById('cat-emoji').value = '';
-  document.getElementById('cat-desc').value  = '';
-  setStatus('cats-status','Catégorie ajoutée.','ok');
-}
-async function delCat(id) {
-  if (!confirm('Supprimer cette catégorie et tous ses votes ?')) return;
-  if (db) { await db.ref(`${FB}/categories/${id}`).remove(); await db.ref(`${FB}/votes/${id}`).remove(); }
-  else { categories=categories.filter(c=>c.id!==id); delete votes[id]; LS.set('categories',categories); LS.set('votes',votes); refresh(); }
-}
-async function resetVotes() {
-  if (!confirm('Réinitialiser TOUS les votes ?')) return;
-  if (db) await db.ref(`${FB}/votes`).remove();
-  else { votes={}; LS.set('votes',{}); refresh(); }
-}
-async function toggleVotesOpen() {
-  const val = document.getElementById('votes-open-toggle').checked;
-  votesOpen = val;
-  if (db) await db.ref(`${FB}/settings/votesOpen`).set(val);
-  else { LS.set('votesOpen', val); refresh(); }
-}
-async function changePin() {
-  const p1=document.getElementById('new-pin').value, p2=document.getElementById('confirm-pin').value;
-  if (!p1) { setStatus('pin-change-status','Entrez un code.','er'); return; }
-  if (p1!==p2) { setStatus('pin-change-status','Les codes ne correspondent pas.','er'); return; }
-  if (db) await db.ref(`${FB}/settings/pin`).set(p1);
-  else LS.set('pin',p1);
-  document.getElementById('new-pin').value=''; document.getElementById('confirm-pin').value='';
-  setStatus('pin-change-status','Code modifié.','ok');
-}
-
-function exportCSV() {
-  const rows = [['Catégorie','Candidat','Nombre de votes']];
-  categories.forEach(cat => {
-    const candidats = getCandidats(cat.id);
-    if (!candidats.length) { rows.push([cat.nom,'—',0]); return; }
-    candidats.forEach(c => rows.push([cat.nom, c.nom, c.count]));
-  });
-  const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
-  a.download = 'palmares-gala.csv'; a.click();
-}
-
-function setStatus(id, msg, cls) {
-  const el=document.getElementById(id); if(!el)return;
-  el.textContent=msg; el.className='status-msg '+cls;
-  setTimeout(()=>{el.textContent='';},4000);
-}
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-initFirebase();
 </script>
 </body>
 </html>
